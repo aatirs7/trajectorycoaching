@@ -1,9 +1,10 @@
 import 'server-only'
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { db } from '@/db'
 import { users } from '@/db/schema'
 import type { Role } from '@/types/globals'
+import { clearReferralCookie, readReferralCookie, resolveReferralCode } from './referral'
 
 /**
  * The Clerk → Neon mirror, lazy half.
@@ -26,22 +27,27 @@ import type { Role } from '@/types/globals'
  * Direction is Clerk → Neon, one-way. Clerk is the source of truth; this table is a
  * mirror so we can JOIN/WHERE on role without an API call.
  */
-export async function ensureUser() {
+export type DbUser = typeof users.$inferSelect
+
+export async function ensureUser(): Promise<DbUser | null> {
   const { userId } = await auth()
   if (!userId) return null
 
   const existing = await db.query.users.findFirst({ where: eq(users.clerkId, userId) })
 
-  // Fast path: already mirrored. The webhook keeps it fresh, so don't re-read Clerk.
-  if (existing) return existing
+  // Fast path: mirrored, and the referral question is already settled. The webhook keeps
+  // email/name/role fresh, so don't pay a Clerk round-trip.
+  if (existing?.referredByCoachId) return existing
 
-  // Slow path: first authenticated request, webhook hasn't landed (or never will,
-  // on localhost). Pull the full profile and upsert.
+  const pendingCode = await readReferralCookie()
+
+  // Nothing to do and nothing to bind.
+  if (existing && !pendingCode) return existing
+
   const clerkUser = await currentUser()
-  if (!clerkUser) return null
+  if (!clerkUser) return existing ?? null
 
   const email = clerkUser.primaryEmailAddress?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress
-
   if (!email) {
     throw new Error(`Clerk user ${userId} has no email address; cannot mirror to Neon.`)
   }
@@ -49,18 +55,47 @@ export async function ensureUser() {
   const fullName = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || null
 
   // Role may not be set yet — the user hasn't been through /onboarding/role. Default to
-  // 'student' so the NOT NULL column has a value; the role picker overwrites it via
-  // Clerk, which then flows back through the webhook.
+  // 'student' so the NOT NULL column has a value; the picker overwrites it via Clerk,
+  // which flows back through the webhook.
   const role = (clerkUser.publicMetadata?.role as Role | undefined) ?? 'student'
+
+  let referredByCoachId: string | null = null
+  if (pendingCode) {
+    const coachUserId = await resolveReferralCode(pendingCode)
+    // A coach cannot refer themselves into their own 20% tier.
+    referredByCoachId = coachUserId && coachUserId !== existing?.id ? coachUserId : null
+  }
 
   const [row] = await db
     .insert(users)
-    .values({ clerkId: userId, email, fullName, role })
+    .values({ clerkId: userId, email, fullName, role, referredByCoachId })
     .onConflictDoUpdate({
       target: users.clerkId,
-      set: { email, fullName, role },
+      set: {
+        email,
+        fullName,
+        role,
+        /**
+         * §6 immutability, enforced in SQL rather than by discipline: COALESCE fills the
+         * column only when it is still NULL. A later visit with a different cookie — or
+         * a webhook that inserted first without one — can never overwrite an established
+         * referral.
+         */
+        referredByCoachId: sql`COALESCE(${users.referredByCoachId}, EXCLUDED.referred_by_coach_id)`,
+      },
     })
     .returning()
 
+  // Consume the cookie exactly once so the binding can't be re-attempted later.
+  if (pendingCode) await clearReferralCookie()
+
   return row
+}
+
+/** The Neon row for the signed-in user, without the Clerk round-trip or upsert. */
+export async function getDbUser(): Promise<DbUser | null> {
+  const { userId } = await auth()
+  if (!userId) return null
+
+  return (await db.query.users.findFirst({ where: eq(users.clerkId, userId) })) ?? null
 }

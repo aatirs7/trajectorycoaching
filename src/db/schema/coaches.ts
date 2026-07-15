@@ -50,8 +50,18 @@ export const coachProfiles = pgTable(
      */
     referralCode: text('referral_code').notNull().unique(),
 
-    /** Spec §9 — the coach's host URI inside the Trajectory Calendly org. */
+    /**
+     * Spec §9 — the coach's host URI inside the Trajectory Calendly org. This is the
+     * API URI (https://api.calendly.com/users/<uuid>) and is what we call the API with.
+     */
     calendlyUserUri: text('calendly_user_uri'),
+
+    /**
+     * The coach's PUBLIC scheduling page (https://calendly.com/<slug>), used for the §8
+     * read-only "view schedule" embed. Distinct from calendlyUserUri — the API URI can't
+     * be iframed and the public slug can't be derived from it, so both are stored.
+     */
+    calendlySchedulingUrl: text('calendly_scheduling_url'),
 
     /** Spec §10 — Stripe Connect Express account. Nullable until onboarding completes. */
     stripeAccountId: text('stripe_account_id'),

@@ -67,6 +67,13 @@ export const sessions = pgTable(
     completedAt: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
     canceledAt: timestamp('canceled_at', { withTimezone: true, mode: 'date' }),
 
+    /**
+     * §12 reminders. Not in spec §4, but without it an hourly reminder job re-sends to
+     * everyone whose session is still inside the window on the next tick. This column IS
+     * the idempotency key for the reminder — a time window alone isn't one.
+     */
+    reminderSentAt: timestamp('reminder_sent_at', { withTimezone: true, mode: 'date' }),
+
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
       .notNull()

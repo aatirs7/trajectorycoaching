@@ -1,0 +1,1 @@
+ALTER TABLE "coach_profiles" ADD COLUMN "calendly_scheduling_url" text;

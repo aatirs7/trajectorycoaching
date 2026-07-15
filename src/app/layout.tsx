@@ -1,6 +1,8 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import { Fraunces, IBM_Plex_Mono, Inter } from 'next/font/google'
+import { SiteFooter } from '@/components/site-footer'
+import { SiteHeader } from '@/components/site-header'
 import './globals.css'
 
 /**
@@ -53,7 +55,11 @@ export default function RootLayout({
          * ClerkProvider goes INSIDE <body>, not wrapping <html>. This changed in
          * Clerk Core 3; the old placement comes from Core 2 docs.
          */}
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </ClerkProvider>
       </body>
     </html>
   )
