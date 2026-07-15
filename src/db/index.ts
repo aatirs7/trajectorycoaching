@@ -21,8 +21,35 @@ import * as schema from './schema'
  * that route. One-file change, paid for at the right time — don't preemptively adopt
  * WebSockets to buy a transaction we may never need.
  */
-const sql = neon(env.DATABASE_URL)
+type Db = ReturnType<typeof create>
 
-export const db = drizzle({ client: sql, schema })
+function create() {
+  return drizzle({ client: neon(env.DATABASE_URL), schema })
+}
+
+let cached: Db | null = null
+
+function getDb(): Db {
+  if (!cached) cached = create()
+  return cached
+}
+
+/**
+ * Constructed on FIRST USE, not at import — for the same reason env validation is lazy
+ * (see the comment in lib/env.ts). `next build` evaluates every module to collect page
+ * data, so building the client at module scope would read env.DATABASE_URL at BUILD time
+ * and fail the build on a deploy that hasn't had its variables set yet.
+ *
+ * The Proxy keeps the ergonomics of a plain export (`db.query.users…`, `db.insert(…)`)
+ * while deferring the connection. Methods are bound to the real instance so drizzle's
+ * internal `this` still resolves.
+ */
+export const db = new Proxy({} as Db, {
+  get: (_target, prop: string | symbol) => {
+    const instance = getDb()
+    const value = Reflect.get(instance, prop, instance)
+    return typeof value === 'function' ? value.bind(instance) : value
+  },
+})
 
 export { schema }

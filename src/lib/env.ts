@@ -70,16 +70,57 @@ const schema = z.object({
   ),
 })
 
-const parsed = schema.safeParse(process.env)
+type Env = z.infer<typeof schema>
 
-if (!parsed.success) {
-  const missing = parsed.error.issues.map((i) => `  - ${i.path.join('.')}: ${i.message}`).join('\n')
-  throw new Error(
-    `Invalid or missing REQUIRED environment variables:\n${missing}\n\nSee .env.example.`,
-  )
+let cached: Env | null = null
+
+/**
+ * Validate on FIRST ACCESS, not at import.
+ *
+ * This is load-bearing and non-obvious. `next build` evaluates every module to collect
+ * page data, so a top-level `schema.parse(process.env)` runs at BUILD time — meaning the
+ * build demands production secrets that, on a fresh deploy, don't exist yet. It fails
+ * with "Failed to collect page data", which points at a route file rather than at the
+ * real cause.
+ *
+ * Deferring to first property access moves the check to request time, where it belongs:
+ * the build needs no secrets, and a genuinely missing var still fails loudly on the
+ * first request that needs it, with the message below.
+ *
+ * Do not "simplify" this back to a module-scope parse.
+ */
+function load(): Env {
+  if (cached) return cached
+
+  const parsed = schema.safeParse(process.env)
+
+  if (!parsed.success) {
+    const missing = parsed.error.issues
+      .map((i) => `  - ${i.path.join('.')}: ${i.message}`)
+      .join('\n')
+
+    throw new Error(
+      `Invalid or missing REQUIRED environment variables:\n${missing}\n\n` +
+        `Set these in .env.local locally, and in Vercel → Settings → Environment Variables\n` +
+        `for a deployment. See .env.example.`,
+    )
+  }
+
+  cached = parsed.data
+  return cached
 }
 
-export const env = parsed.data
+/**
+ * Reads like a plain object; validates lazily behind a Proxy. `env.DATABASE_URL` throws
+ * the message above if it's absent — at request time, not build time.
+ */
+export const env = new Proxy({} as Env, {
+  get: (_target, prop: string) => load()[prop as keyof Env],
+  has: (_target, prop: string) => prop in load(),
+  ownKeys: () => Reflect.ownKeys(load()),
+  getOwnPropertyDescriptor: (_target, prop: string) =>
+    Object.getOwnPropertyDescriptor(load(), prop),
+})
 
 /**
  * Keys whose absence disables a feature rather than the app.
@@ -89,8 +130,8 @@ export const env = parsed.data
  * index type.
  */
 type OptionalKey = {
-  [K in keyof typeof env]-?: undefined extends (typeof env)[K] ? K : never
-}[keyof typeof env]
+  [K in keyof Env]-?: undefined extends Env[K] ? K : never
+}[keyof Env]
 
 /**
  * Read an optional env var at point of use, failing with an actionable message.
