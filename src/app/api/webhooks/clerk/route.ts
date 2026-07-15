@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm'
 import type { NextRequest } from 'next/server'
 import { db } from '@/db'
 import { users } from '@/db/schema'
+import { env } from '@/lib/env'
 import type { Role } from '@/types/globals'
 
 /**
@@ -21,6 +22,14 @@ import type { Role } from '@/types/globals'
  * signing secret is wrong; a 500 means this handler threw.
  */
 export async function POST(req: NextRequest) {
+  // Degrade like every other webhook rather than throwing: the secret can't exist until
+  // the endpoint is created in the Clerk dashboard, and ensureUser() covers the mirror
+  // until it is.
+  if (!env.CLERK_WEBHOOK_SIGNING_SECRET) {
+    console.warn('[clerk-webhook] event received but CLERK_WEBHOOK_SIGNING_SECRET is not set')
+    return new Response('Clerk webhooks not configured', { status: 503 })
+  }
+
   let evt: Awaited<ReturnType<typeof verifyWebhook>>
 
   try {

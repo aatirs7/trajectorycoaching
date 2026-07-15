@@ -1,4 +1,5 @@
 import { SignInButton, UserButton } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { getDbUser } from '@/lib/auth/ensure-user'
@@ -10,9 +11,27 @@ import { unreadCount } from '@/lib/notifications'
  *
  * This is presentation only. Every destination re-checks authorization at the resource,
  * because hiding a link is not access control.
+ *
+ * TWO SEPARATE QUESTIONS, two separate sources — do not collapse them:
+ *
+ *   "Is this person signed in?"  → CLERK (`auth()`). Clerk is the source of truth for
+ *      identity. Answering this from our Neon mirror is a bug: on a brand-new account the
+ *      mirror row may not exist yet (the user.created webhook hasn't landed, and
+ *      ensureUser() on the page races this component's query), so a genuinely signed-in
+ *      user would be shown "Sign in".
+ *
+ *   "What can they see?"         → the Neon mirror, for role. If it hasn't landed yet we
+ *      simply render no role-specific links for that one paint; the next navigation has
+ *      them. Showing the wrong auth state is a bug; briefly showing fewer nav links isn't.
+ *
+ * Auth state is resolved on the server rather than with <Show>, so there's no
+ * signed-out flash — and we need the role for the nav in the same pass anyway.
  */
 export async function SiteHeader() {
-  const user = await getDbUser()
+  const { userId } = await auth()
+
+  // Only touch the database when Clerk says there's someone to look up.
+  const user = userId ? await getDbUser() : null
 
   const [surveyDone, unread] = user
     ? await Promise.all([
@@ -29,26 +48,28 @@ export async function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-1">
-          {user ? (
+          {userId ? (
             <>
               {/* §2.3: no browse link until the survey is done — the page would bounce them. */}
-              {user.role === 'student' && surveyDone ? (
+              {user?.role === 'student' && surveyDone ? (
                 <NavLink href="/coaches">Browse</NavLink>
               ) : null}
 
-              {user.role === 'coach' ? <NavLink href="/coach">Coaching</NavLink> : null}
-              {user.role === 'admin' ? <NavLink href="/admin">Admin</NavLink> : null}
+              {user?.role === 'coach' ? <NavLink href="/coach">Coaching</NavLink> : null}
+              {user?.role === 'admin' ? <NavLink href="/admin">Admin</NavLink> : null}
 
-              {user.role !== 'admin' ? <NavLink href="/sessions">Sessions</NavLink> : null}
+              {user && user.role !== 'admin' ? <NavLink href="/sessions">Sessions</NavLink> : null}
 
-              <NavLink href="/notifications">
-                Notifications
-                {unread > 0 ? (
-                  <span className="ml-1.5 rounded-full bg-gold px-1.5 py-0.5 font-mono text-[10px] text-ink">
-                    {unread}
-                  </span>
-                ) : null}
-              </NavLink>
+              {user ? (
+                <NavLink href="/notifications">
+                  Notifications
+                  {unread > 0 ? (
+                    <span className="ml-1.5 rounded-full bg-gold px-1.5 py-0.5 font-mono text-[10px] text-ink">
+                      {unread}
+                    </span>
+                  ) : null}
+                </NavLink>
+              ) : null}
 
               <div className="ml-2">
                 <UserButton />

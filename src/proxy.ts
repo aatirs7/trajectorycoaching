@@ -20,8 +20,9 @@ export const config = {
   matcher: [
     // Everything except Next internals and static assets.
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for Clerk's auto-proxy path. `:path*` (not `(.*)`) also matches the
+    // bare `/__clerk`, which the capture-group form misses.
+    '/__clerk/:path*',
     '/(api|trpc)(.*)',
-    // Clerk's frontend API routes — required.
-    '/__clerk/(.*)',
   ],
 }

@@ -39,9 +39,20 @@ const schema = z.object({
   /** Neon POOLED connection string (…-pooler.…). Migrations use the unpooled one. */
   DATABASE_URL: z.string().url(),
   CLERK_SECRET_KEY: z.string().min(1),
-  CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(1),
 
   // --- Optional: activate an integration when supplied ----------------------
+  /**
+   * Spec §3. Clerk → Neon mirror webhook.
+   *
+   * OPTIONAL, not required, and the ordering is why: this secret cannot exist until the
+   * webhook endpoint does, and the endpoint needs a deployed URL — so requiring it makes
+   * the first deploy impossible. It's an integration key like any other.
+   *
+   * Without it the webhook route 503s and role/email changes made in the Clerk dashboard
+   * don't propagate; ensureUser() still mirrors users on their first authenticated
+   * request, which is why the app is fully usable in the meantime.
+   */
+  CLERK_WEBHOOK_SIGNING_SECRET: optionalKey(),
   /** Spec §10. Stripe Connect (platform account). */
   STRIPE_SECRET_KEY: optionalKey(),
   STRIPE_WEBHOOK_SECRET: optionalKey(),
@@ -159,6 +170,7 @@ export function requireEnv(key: OptionalKey, feature: string): string {
  */
 export function integrationStatus() {
   return {
+    clerkWebhook: Boolean(env.CLERK_WEBHOOK_SIGNING_SECRET),
     stripe: Boolean(env.STRIPE_SECRET_KEY),
     stripeWebhook: Boolean(env.STRIPE_WEBHOOK_SECRET),
     calendly: Boolean(env.CALENDLY_API_TOKEN && env.CALENDLY_ORGANIZATION_URI),

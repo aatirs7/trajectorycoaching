@@ -28,6 +28,13 @@ export default async function IntegrationsPage() {
 
   const rows: Row[] = [
     {
+      name: 'Clerk — webhooks (§3)',
+      live: s.clerkWebhook,
+      envVars: ['CLERK_WEBHOOK_SIGNING_SECRET'],
+      whenMissing:
+        'Role/email changes made in the Clerk dashboard won’t reach Neon. Sign-up still works — ensureUser() mirrors a user on their first authenticated request — so this is degraded, not broken.',
+    },
+    {
       name: 'Stripe — payments (§10)',
       live: s.stripe,
       envVars: ['STRIPE_SECRET_KEY'],
