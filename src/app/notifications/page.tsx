@@ -31,8 +31,10 @@ export default async function NotificationsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-14">
-      <p className="label-mono">Activity</p>
-      <h1 className="mt-3 text-4xl">Notifications</h1>
+      <div className="text-center">
+        <p className="label-mono">Activity</p>
+        <h1 className="mt-3 text-4xl">Notifications</h1>
+      </div>
 
       {items.length === 0 ? (
         <Card className="mt-8 border-line/20 p-10 text-center">

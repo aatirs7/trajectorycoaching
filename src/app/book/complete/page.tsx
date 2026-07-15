@@ -45,7 +45,7 @@ export default async function BookCompletePage({
     return (
       <Problem
         title="Confirming your payment…"
-        body="This usually takes a few seconds. Refresh in a moment — if you were charged, your session is safe and will appear here."
+        body="This usually takes a few seconds. Refresh in a moment. If you were charged, your session is safe and will appear here."
       />
     )
   }
@@ -95,7 +95,7 @@ export default async function BookCompletePage({
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-6 py-20">
       <p className="label-mono">Payment received</p>
-      <h1 className="mt-3 text-4xl">One step left — pick your time</h1>
+      <h1 className="mt-3 text-4xl">One step left: pick your time</h1>
       <p className="mt-3 text-slate">
         You paid {formatPrice(session.amountCents)} for a {offering?.lengthMinutes}-minute session
         with {coach?.fullName ?? 'your coach'}.
@@ -115,7 +115,7 @@ export default async function BookCompletePage({
           <>
             <p className="text-sm text-destructive">{error}</p>
             <p className="mt-3 text-sm text-slate">
-              Your payment is safe and your session is held. We&rsquo;ve been notified — you&rsquo;ll
+              Your payment is safe and your session is held. We&rsquo;ve been notified, and you&rsquo;ll
               get an email with your scheduling link as soon as this is sorted, or you can cancel
               for a full refund since no time was ever booked.
             </p>

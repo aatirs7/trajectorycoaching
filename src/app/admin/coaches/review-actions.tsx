@@ -22,7 +22,7 @@ export function PendingActions({ profileId }: { profileId: string }) {
           <Textarea
             name="reason"
             rows={2}
-            placeholder="Optional — included in the email to them."
+            placeholder="Optional. Included in the email to them."
             aria-label="Reason for rejection"
           />
           <div className="mt-2 flex gap-2">

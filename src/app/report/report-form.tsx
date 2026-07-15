@@ -60,7 +60,7 @@ export function ReportForm({
           Tell us more
         </Label>
         <p className="mt-1 text-sm text-slate">
-          Specifics help — dates, what was said, anything we can verify.
+          Specifics help: dates, what was said, anything we can verify.
         </p>
         <Textarea id="description" name="description" rows={6} required className="mt-2" />
       </div>

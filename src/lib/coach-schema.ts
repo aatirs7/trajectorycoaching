@@ -91,7 +91,7 @@ export const coachProfileSchema = z.object({
   bio: z
     .string()
     .trim()
-    .min(80, 'Give students something to go on — at least 80 characters')
+    .min(80, 'Give students something to go on: at least 80 characters')
     .max(2000),
   headshotUrl: z.string().trim().url('Must be a valid URL').optional().or(z.literal('')),
   linkedinUrl,

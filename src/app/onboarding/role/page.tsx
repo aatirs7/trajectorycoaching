@@ -43,11 +43,13 @@ export default async function RolePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-20">
-      <p className="label-mono">Welcome</p>
-      <h1 className="mt-3 text-4xl">How will you use Trajectory?</h1>
-      <p className="mt-3 text-slate">
-        This sets up your account. You can&rsquo;t switch later, so pick the one that fits.
-      </p>
+      <div className="text-center">
+        <p className="label-mono">Welcome</p>
+        <h1 className="mt-3 text-4xl">How will you use Trajectory?</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
+          This sets up your account. You can&rsquo;t switch later, so pick the one that fits.
+        </p>
+      </div>
 
       <RolePicker />
     </main>

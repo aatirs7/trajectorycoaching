@@ -24,11 +24,13 @@ const SWATCHES = [
 export default function StyleGuidePage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-16">
-      <p className="label-mono">Internal</p>
-      <h1 className="mt-3 text-4xl">Style guide</h1>
-      <p className="mt-3 max-w-prose text-slate">
-        Brand tokens and type specimens for Trajectory Coaching. Own your trajectory.
-      </p>
+      <div className="text-center">
+        <p className="label-mono">Internal</p>
+        <h1 className="mt-3 text-4xl">Style guide</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
+          Brand tokens and type specimens for Trajectory Coaching. Own your trajectory.
+        </p>
+      </div>
 
       <section className="mt-14">
         <h2 className="text-2xl">Color</h2>
@@ -51,18 +53,18 @@ export default function StyleGuidePage() {
         <h2 className="text-2xl">Type</h2>
         <div className="mt-6 space-y-6">
           <div>
-            <p className="label-mono">Fraunces — headings &amp; logo</p>
+            <p className="label-mono">Fraunces / headings &amp; logo</p>
             <p className="mt-2 font-display text-3xl">Own your trajectory.</p>
           </div>
           <div>
-            <p className="label-mono">Inter — body</p>
+            <p className="label-mono">Inter / body</p>
             <p className="mt-2 max-w-prose">
               Coaching from people who already have the job you want. Book a session, get a
               straight answer, and move.
             </p>
           </div>
           <div>
-            <p className="label-mono">IBM Plex Mono — labels &amp; tags</p>
+            <p className="label-mono">IBM Plex Mono / labels &amp; tags</p>
             <p className="mt-2 font-mono text-sm">INVESTMENT BANKING · 30 MIN · $75</p>
           </div>
         </div>

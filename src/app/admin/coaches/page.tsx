@@ -39,12 +39,14 @@ export default async function AdminCoachesPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Admin</p>
-      <h1 className="mt-3 text-4xl">Coach approvals</h1>
-      <p className="mt-3 text-slate">
+      <div className="text-center">
+        <p className="label-mono">Admin</p>
+        <h1 className="mt-3 text-4xl">Coach approvals</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         Verify each coach&rsquo;s stated employer against their LinkedIn before approving.
-        Nobody is bookable until you do.
-      </p>
+          Nobody is bookable until you do.
+        </p>
+      </div>
 
       <section className="mt-10">
         <h2 className="text-2xl">
@@ -125,11 +127,11 @@ function CoachRow({
                   .sort((a, b) => a.lengthMinutes - b.lengthMinutes)
                   .map((o) => `${o.lengthMinutes}m ${formatPrice(o.priceCents)}`)
                   .join(' · ')
-              : '—'}
+              : 'None'}
           </dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="label-mono">LinkedIn — verify the employer</dt>
+          <dt className="label-mono">LinkedIn: verify the employer</dt>
           <dd className="mt-0.5">
             <a
               href={profile.linkedinUrl}

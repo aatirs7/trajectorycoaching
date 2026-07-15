@@ -20,7 +20,7 @@ export async function startBooking(_prev: BookState, formData: FormData): Promis
   if (!bookingEnabled()) {
     return {
       error:
-        'Booking isn’t switched on yet — payments and scheduling are still being configured. Nothing was charged.',
+        'Booking isn’t switched on yet. Payments and scheduling are still being configured, and nothing was charged.',
     }
   }
 

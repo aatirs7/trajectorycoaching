@@ -28,46 +28,46 @@ export default async function IntegrationsPage() {
 
   const rows: Row[] = [
     {
-      name: 'Clerk — webhooks (§3)',
+      name: 'Clerk webhooks (§3)',
       live: s.clerkWebhook,
       envVars: ['CLERK_WEBHOOK_SIGNING_SECRET'],
       whenMissing:
-        'Role/email changes made in the Clerk dashboard won’t reach Neon. Sign-up still works — ensureUser() mirrors a user on their first authenticated request — so this is degraded, not broken.',
+        'Role/email changes made in the Clerk dashboard won’t reach Neon. Sign-up still works, because ensureUser() mirrors a user on their first authenticated request, so this is degraded rather than broken.',
     },
     {
-      name: 'Stripe — payments (§10)',
+      name: 'Stripe payments (§10)',
       live: s.stripe,
       envVars: ['STRIPE_SECRET_KEY'],
       whenMissing: 'Booking is disabled. Coaches can’t be paid and no session can be created.',
     },
     {
-      name: 'Stripe — webhooks',
+      name: 'Stripe webhooks',
       live: s.stripeWebhook,
       envVars: ['STRIPE_WEBHOOK_SECRET'],
       whenMissing:
-        'Payments would complete but no session row would ever be created — checkout.session.completed is the only signal money moved. Booking is effectively broken without this.',
+        'Payments would complete but no session row would ever be created, because checkout.session.completed is the only signal money moved. Booking is effectively broken without this.',
     },
     {
-      name: 'Calendly — scheduling (§9)',
+      name: 'Calendly scheduling (§9)',
       live: s.calendly,
       envVars: ['CALENDLY_API_TOKEN', 'CALENDLY_ORGANIZATION_URI'],
       whenMissing: 'No single-use scheduling links. Students could pay but never pick a time.',
     },
     {
-      name: 'Calendly — webhooks',
+      name: 'Calendly webhooks',
       live: s.calendlyWebhook,
       envVars: ['CALENDLY_WEBHOOK_SIGNING_KEY'],
       whenMissing:
-        'Sessions would stay “needs a time” forever — invitee.created is what moves them to booked.',
+        'Sessions would stay “needs a time” forever, because invitee.created is what moves them to booked.',
     },
     {
-      name: 'Resend — email (§12)',
+      name: 'Resend email (§12)',
       live: s.email,
       envVars: ['RESEND_API_KEY', 'EMAIL_FROM'],
-      whenMissing: 'No emails send. In-app notifications still work — they’re the durable record.',
+      whenMissing: 'No emails send. In-app notifications still work, and they’re the durable record.',
     },
     {
-      name: 'Cron — session completion (§11)',
+      name: 'Cron: session completion (§11)',
       live: s.cron,
       envVars: ['CRON_SECRET'],
       whenMissing:
@@ -79,13 +79,15 @@ export default async function IntegrationsPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Admin</p>
-      <h1 className="mt-3 text-4xl">Integrations</h1>
-      <p className="mt-3 max-w-prose text-slate">
+      <div className="text-center">
+        <p className="label-mono">Admin</p>
+        <h1 className="mt-3 text-4xl">Integrations</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         Everything here degrades quietly when unconfigured, so the app runs before the
-        accounts exist. That&rsquo;s useful in development and hazardous at launch — this page
-        is the check.
-      </p>
+        accounts exist. That&rsquo;s useful in development and hazardous at launch, so this page
+          is the check.
+        </p>
+      </div>
 
       <Card
         className={`mt-8 border-line/20 p-6 ${ready ? '' : 'border-gold bg-secondary'}`}

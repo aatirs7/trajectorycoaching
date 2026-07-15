@@ -43,7 +43,7 @@ export function BrowseFilters({ industries }: { industries: string[] }) {
   const hasFilters = ['industry', 'maxPrice', 'length'].some((k) => searchParams.get(k))
 
   return (
-    <div className="mt-8 flex flex-wrap items-end gap-4 border-y border-line/15 py-5">
+    <div className="mt-8 flex flex-wrap items-end justify-center gap-4 border-y border-line/15 py-5">
       <div>
         <Label htmlFor="f-industry" className="label-mono">
           Field

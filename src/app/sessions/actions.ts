@@ -27,7 +27,7 @@ export async function cancelSessionAction(
 
     return {
       success: outcome.refunded
-        ? 'Session canceled. Your refund is on its way — it usually lands in 5–10 business days.'
+        ? 'Session canceled. Your refund is on its way, and usually lands in 5 to 10 business days.'
         : 'Session canceled. As it was inside the 24-hour window, it is non-refundable.',
     }
   } catch (err) {

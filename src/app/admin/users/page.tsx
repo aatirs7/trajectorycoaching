@@ -40,12 +40,14 @@ export default async function AdminUsersPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Admin</p>
-      <h1 className="mt-3 text-4xl">Accounts</h1>
-      <p className="mt-3 max-w-prose text-slate">
+      <div className="text-center">
+        <p className="label-mono">Admin</p>
+        <h1 className="mt-3 text-4xl">Accounts</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         Suspending signs someone out immediately and blocks them from signing back in. For
-        coaches it also pulls their profile out of browse.
-      </p>
+          coaches it also pulls their profile out of browse.
+        </p>
+      </div>
 
       {!clerkReachable ? (
         <Card className="mt-8 border-gold bg-secondary p-5">

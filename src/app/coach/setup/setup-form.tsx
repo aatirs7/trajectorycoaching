@@ -40,13 +40,16 @@ function Field({
   errors?: string[]
   children: React.ReactNode
 }) {
+  /** Label and hint centred; the input itself left-aligned in a centred block. */
   return (
-    <div className="border-t border-line/15 pt-7">
+    <div className="border-t border-line/15 pt-7 text-center">
       <Label htmlFor={htmlFor} className="text-base font-normal text-ink">
         {label}
       </Label>
-      {hint ? <p className="mt-1 text-sm text-slate">{hint}</p> : null}
-      <div className="mt-3">{children}</div>
+      {hint ? <p className="mx-auto mt-1 max-w-md text-sm text-slate">{hint}</p> : null}
+      <div className="mt-4 flex justify-center">
+        <div className="w-full max-w-md text-left">{children}</div>
+      </div>
       {errors?.length ? (
         <p role="alert" className="mt-2 text-sm text-destructive">
           {errors[0]}
@@ -88,7 +91,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
 
       <Field
         label="What's your current role?"
-        hint="Title and company — this is what students see first."
+        hint="Title and company. This is what students see first."
         htmlFor="currentTitle"
         errors={err.currentTitle}
       >
@@ -127,7 +130,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
 
       <Field
         label="Headshot URL"
-        hint="Optional for now — paste a link to a photo."
+        hint="Optional for now. Paste a link to a photo."
         htmlFor="headshotUrl"
         errors={err.headshotUrl}
       >
@@ -136,7 +139,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
 
       <Field
         label="Your Calendly link"
-        hint="Optional — students see a read-only preview of your availability. They’ll still book through us, and you’ll get a private link per paid session."
+        hint="Optional. Students see a read-only preview of your availability. They’ll still book through us, and you’ll get a private link per paid session."
         htmlFor="calendlySchedulingUrl"
         errors={err.calendlySchedulingUrl}
       >
@@ -164,7 +167,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
 
       <Field
         label="Sessions you offer"
-        hint="Pick the lengths and set your rate for each. You keep 70–80% — see your dashboard."
+        hint="Pick the lengths and set your rate for each. You keep 70 to 80%, shown on your dashboard."
         errors={err.offerings ?? err._form}
       >
         <div className="space-y-3">
@@ -205,7 +208,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
         </div>
       </Field>
 
-      <div className="border-t border-line/15 pt-7">
+      <div className="border-t border-line/15 pt-7 text-center">
         {state.message ? (
           <p role="alert" className="mb-3 text-sm text-destructive">
             {state.message}
@@ -215,8 +218,8 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
           {pending ? 'Saving…' : existing ? 'Save changes' : 'Submit for review'}
         </Button>
         {!existing ? (
-          <p className="mt-3 text-sm text-slate">
-            We review every profile before it goes live — usually within a couple of days.
+          <p className="mx-auto mt-3 max-w-md text-sm text-slate">
+            We review every profile before it goes live, usually within a couple of days.
           </p>
         ) : null}
       </div>

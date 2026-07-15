@@ -18,12 +18,14 @@ export default async function SurveyPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="label-mono">Step 2 of 2</p>
-      <h1 className="mt-3 text-4xl">Tell us where you&rsquo;re headed</h1>
-      <p className="mt-3 max-w-prose text-slate">
+      <div className="text-center">
+        <p className="label-mono">Step 2 of 2</p>
+        <h1 className="mt-3 text-4xl">Tell us where you&rsquo;re headed</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         Ten quick questions. This is how we match you with coaches who&rsquo;ve actually done
-        the thing you&rsquo;re trying to do — and it&rsquo;s the last step before you can browse.
-      </p>
+          the thing you&rsquo;re trying to do, and it&rsquo;s the last step before you can browse.
+        </p>
+      </div>
 
       <SurveyForm
         existing={

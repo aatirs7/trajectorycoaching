@@ -126,7 +126,7 @@ export function SessionCard({ session, viewerRole }: { session: SessionView; vie
               <p className="text-sm text-ink">
                 {eligibility.refundable
                   ? 'This is more than 24 hours away, so you’ll get a full refund.'
-                  : 'This is inside the 24-hour window — it is non-refundable.'}
+                  : 'This is inside the 24-hour window, so it is non-refundable.'}
               </p>
               <div className="mt-3 flex gap-2">
                 <Button type="submit" size="sm" variant="destructive" disabled={canceling}>

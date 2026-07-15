@@ -58,7 +58,7 @@ export async function approveCoach(_prev: AdminState, formData: FormData): Promi
         .where(eq(coachProfiles.id, profile.id))
     } catch (err) {
       console.error('[admin] Stripe account creation failed', err)
-      warnings.push('Stripe account could not be created — the coach can retry from their dashboard.')
+      warnings.push('Stripe account could not be created. The coach can retry from their dashboard.')
     }
   } else if (!stripeConfigured()) {
     warnings.push('Stripe isn’t configured yet, so no payout account was created.')
@@ -76,11 +76,11 @@ export async function approveCoach(_prev: AdminState, formData: FormData): Promi
           .where(eq(coachProfiles.id, profile.id))
       } else {
         await inviteToOrganization(coach.email)
-        warnings.push('Calendly invitation sent — their host link is captured once they accept.')
+        warnings.push('Calendly invitation sent. Their host link is captured once they accept.')
       }
     } catch (err) {
       console.error('[admin] Calendly org invite failed', err)
-      warnings.push('Calendly invite failed — invite them manually.')
+      warnings.push('Calendly invite failed. Invite them manually.')
     }
   } else if (!calendlyConfigured()) {
     warnings.push('Calendly isn’t configured yet, so no invitation was sent.')

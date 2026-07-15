@@ -28,13 +28,15 @@ export default async function AdminHome() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Admin</p>
-      <h1 className="mt-3 text-4xl">Control room</h1>
+      <div className="text-center">
+        <p className="label-mono">Admin</p>
+        <h1 className="mt-3 text-4xl">Control room</h1>
+      </div>
 
       {!bookingEnabled() ? (
         <Card className="mt-8 border-gold bg-secondary p-5">
           <p className="text-sm">
-            Booking is not live — payments and/or scheduling aren&rsquo;t configured.{' '}
+            Booking is not live. Payments and/or scheduling aren&rsquo;t configured.{' '}
             <Link href="/admin/integrations" className="underline underline-offset-4">
               See what&rsquo;s missing
             </Link>

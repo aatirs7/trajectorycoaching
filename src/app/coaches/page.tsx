@@ -37,11 +37,13 @@ export default async function CoachesPage({
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-14">
-      <p className="label-mono">Coaches</p>
-      <h1 className="mt-3 text-4xl">Find someone who&rsquo;s done it</h1>
-      <p className="mt-3 max-w-prose text-slate">
-        Every coach here has been reviewed and verified against their stated employer.
-      </p>
+      <div className="text-center">
+        <p className="label-mono">Coaches</p>
+        <h1 className="mt-3 text-4xl">Find someone who&rsquo;s done it</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
+          Every coach here has been reviewed and verified against their stated employer.
+        </p>
+      </div>
 
       <BrowseFilters industries={industries} />
 
@@ -49,7 +51,7 @@ export default async function CoachesPage({
         <Card className="mt-10 border-line/20 p-10 text-center">
           <p className="text-lg">No coaches match those filters yet.</p>
           <p className="mt-2 text-sm text-slate">
-            Try widening your search — or check back shortly, we&rsquo;re onboarding coaches now.
+            Try widening your search, or check back shortly. We&rsquo;re onboarding coaches now.
           </p>
         </Card>
       ) : (

@@ -86,7 +86,7 @@ export function BookingConfirmedEmail(props: {
       <Heading style={h1}>Your session is booked</Heading>
       <Text style={text}>Hi {props.studentName},</Text>
       <Text style={text}>
-        You&rsquo;re confirmed with {props.coachName}. Details are below — the calendar
+        You&rsquo;re confirmed with {props.coachName}. Details are below. The calendar
         invite comes from Calendly separately.
       </Text>
       <Section style={{ margin: '20px 0' }}>
@@ -121,8 +121,8 @@ export function PaymentReceivedEmail(props: {
   scheduleUrl: string
 }) {
   return (
-    <Shell preview="Payment received — now pick your time">
-      <Heading style={h1}>Payment received — pick your time</Heading>
+    <Shell preview="Payment received, now pick your time">
+      <Heading style={h1}>Payment received: pick your time</Heading>
       <Text style={text}>Hi {props.studentName},</Text>
       <Text style={text}>
         We&rsquo;ve received {props.amount} for your session with {props.coachName}. One
@@ -197,7 +197,7 @@ export function CoachApprovedEmail(props: { coachName: string; payoutsUrl: strin
         Set up payouts
       </Link>
       <Text style={muted}>
-        You&rsquo;ll also get a Calendly invitation — accept it and create your event
+        You&rsquo;ll also get a Calendly invitation. Accept it and create your event
         types so students can pick a time.
       </Text>
     </Shell>

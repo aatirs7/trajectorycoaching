@@ -156,7 +156,7 @@ export function requireEnv(key: OptionalKey, feature: string): string {
   if (!value) {
     throw new Error(
       `${feature} is not configured: ${key} is missing from the environment.\n` +
-        `Add it to .env.local (and to Vercel) — see .env.example. ` +
+        `Add it to .env.local (and to Vercel). See .env.example. ` +
         `Until then, this feature is intentionally disabled and the rest of the app is unaffected.`,
     )
   }

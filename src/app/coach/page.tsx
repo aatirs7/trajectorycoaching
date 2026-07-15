@@ -35,14 +35,16 @@ export default async function CoachHome() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Coaching</p>
-      <h1 className="mt-3 text-4xl">
-        {profile.status === 'approved' ? 'You’re live' : 'Almost there'}
-      </h1>
+      <div className="text-center">
+        <p className="label-mono">Coaching</p>
+        <h1 className="mt-3 text-4xl">
+          {profile.status === 'approved' ? 'You’re live' : 'Almost there'}
+        </h1>
+      </div>
 
       {profile.status === 'pending' ? (
         <p className="mt-3 max-w-prose text-slate">
-          Your profile is with our team for review — we verify every coach&rsquo;s employer
+          Your profile is with our team for review. We verify every coach&rsquo;s employer
           against their LinkedIn before going live. Usually a couple of days.
         </p>
       ) : profile.status === 'suspended' ? (
@@ -106,7 +108,7 @@ export default async function CoachHome() {
         <Card className="border-line/20 p-6">
           <p className="label-mono">Your referral link</p>
           <p className="mt-3 text-sm text-slate">
-            Students who sign up through this link cost you a lower commission —{' '}
+            Students who sign up through this link cost you a lower commission:{' '}
             {PLATFORM_SOURCED_BPS / 100}% drops to {COACH_SOURCED_BPS / 100}% on their sessions
             with you, permanently.
           </p>

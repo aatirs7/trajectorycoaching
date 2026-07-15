@@ -149,7 +149,7 @@ async function mintSchedulingLink(sessionId: string) {
     payload: { sessionId: session.id, scheduleUrl },
     email: {
       to: student.email,
-      subject: 'Payment received — pick your time',
+      subject: 'Payment received: pick your time',
       react: PaymentReceivedEmail({
         studentName: firstName(student.fullName),
         coachName: coach?.fullName ?? 'your coach',

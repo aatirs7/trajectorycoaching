@@ -113,14 +113,14 @@ export default async function SessionsPage() {
 
 function Header({ viewerRole }: { viewerRole: 'student' | 'coach' }) {
   return (
-    <>
+    <div className="text-center">
       <p className="label-mono">Coaching sessions</p>
       <h1 className="mt-3 text-4xl">Your sessions</h1>
-      <p className="mt-3 text-slate">
+      <p className="mx-auto mt-3 max-w-prose text-slate">
         {viewerRole === 'coach'
           ? 'Everything students have booked with you.'
           : 'Everything you’ve booked. Free cancellation up to 24 hours before.'}
       </p>
-    </>
+    </div>
   )
 }

@@ -93,5 +93,5 @@ export async function submitReport(_prev: ReportState, formData: FormData): Prom
     ),
   )
 
-  return { success: 'Thanks — we’ve got it. Our team will review this and follow up.' }
+  return { success: 'Thanks, we’ve got it. Our team will review this and follow up.' }
 }

@@ -42,13 +42,22 @@ function Field({
   errors?: string[]
   children: React.ReactNode
 }) {
+  /**
+   * Question and hint are centred; the ANSWER is left-aligned inside a centred block.
+   *
+   * That split is deliberate. Centring a list of radio options gives every row a
+   * different left edge, so the eye has nothing to run down and scanning ten questions
+   * becomes work. The form reads as centred; the choices stay readable.
+   */
   return (
-    <div className="border-t border-line/15 pt-7">
+    <div className="border-t border-line/15 pt-7 text-center">
       <Label htmlFor={htmlFor} className="text-base font-normal text-ink">
         {label}
       </Label>
       {hint ? <p className="mt-1 text-sm text-slate">{hint}</p> : null}
-      <div className="mt-3">{children}</div>
+      <div className="mt-4 flex justify-center">
+        <div className="w-full max-w-md text-left">{children}</div>
+      </div>
       {errors?.length ? (
         <p role="alert" className="mt-2 text-sm text-destructive">
           {errors[0]}
@@ -75,7 +84,7 @@ export function SurveyForm({ existing }: { existing: Existing }) {
   return (
     <form action={action} className="mt-10 space-y-7">
       {/* Q1 */}
-      <div>
+      <div className="text-center">
         <Label className="text-base font-normal text-ink">
           Are you in high school or college?
         </Label>
@@ -83,7 +92,7 @@ export function SurveyForm({ existing }: { existing: Existing }) {
           name="educationLevel"
           value={level}
           onValueChange={(v) => setLevel(v as 'hs' | 'college')}
-          className="mt-3 flex gap-6"
+          className="mt-4 flex justify-center gap-6"
           required
         >
           <div className="flex items-center gap-2">
@@ -244,7 +253,7 @@ export function SurveyForm({ existing }: { existing: Existing }) {
         <Input id="heardFrom" name="heardFrom" defaultValue={existing?.heardFrom ?? ''} />
       </Field>
 
-      <div className="border-t border-line/15 pt-7">
+      <div className="border-t border-line/15 pt-7 text-center">
         {state.message ? (
           <p role="alert" className="mb-3 text-sm text-destructive">
             {state.message}

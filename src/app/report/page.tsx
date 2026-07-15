@@ -23,12 +23,14 @@ export default async function ReportPage({
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-6 py-14">
-      <p className="label-mono">Trust &amp; safety</p>
-      <h1 className="mt-3 text-4xl">Report a problem</h1>
-      <p className="mt-3 text-slate">
+      <div className="text-center">
+        <p className="label-mono">Trust &amp; safety</p>
+        <h1 className="mt-3 text-4xl">Report a problem</h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         This goes straight to our team. We read every report, and we&rsquo;ll never share
-        your name with the person you&rsquo;re reporting.
-      </p>
+          your name with the person you&rsquo;re reporting.
+        </p>
+      </div>
 
       <ReportForm
         reportedUserId={reported.id}

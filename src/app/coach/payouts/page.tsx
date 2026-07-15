@@ -31,8 +31,9 @@ export default async function PayoutsPage() {
       <Shell>
         <Card className="mt-8 border-line/20 p-6">
           <p className="text-sm text-slate">
-            Payouts aren&rsquo;t switched on yet — we&rsquo;re still finishing our payment setup.
-            Nothing is needed from you right now; we&rsquo;ll email you the moment it&rsquo;s ready.
+            Payouts aren&rsquo;t switched on yet, as we&rsquo;re still finishing our payment
+            setup. Nothing is needed from you right now, and we&rsquo;ll email you the moment
+            it&rsquo;s ready.
           </p>
         </Card>
       </Shell>
@@ -82,7 +83,7 @@ export default async function PayoutsPage() {
           <>
             <p className="text-lg">You&rsquo;re set up to get paid.</p>
             <p className="mt-2 text-sm text-slate">
-              Payouts land automatically after each session — we take our commission at the
+              Payouts land automatically after each session. We take our commission at the
               time of the charge, so there&rsquo;s nothing to invoice.
             </p>
           </>
@@ -90,7 +91,7 @@ export default async function PayoutsPage() {
           <>
             <p className="text-lg">One more step before you can be booked.</p>
             <p className="mt-2 text-sm text-slate">
-              Stripe handles your payout details — we never see your bank information. It takes
+              Stripe handles your payout details, so we never see your bank information. It takes
               about two minutes.
             </p>
           </>
@@ -116,7 +117,7 @@ export default async function PayoutsPage() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-14">
+    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-14 text-center">
       <p className="label-mono">Getting paid</p>
       <h1 className="mt-3 text-4xl">Payouts</h1>
       {children}

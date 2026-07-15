@@ -112,7 +112,7 @@ export function statusLabel(status: SessionStatus): string {
     case 'completed':
       return 'Completed'
     case 'canceled_free':
-      return 'Canceled — refund pending'
+      return 'Canceled, refund pending'
     case 'canceled_late':
       return 'Canceled late'
     case 'refunded':

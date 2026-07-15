@@ -29,8 +29,10 @@ export default async function AdminReportsPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <p className="label-mono">Admin</p>
-      <h1 className="mt-3 text-4xl">Reports</h1>
+      <div className="text-center">
+        <p className="label-mono">Admin</p>
+        <h1 className="mt-3 text-4xl">Reports</h1>
+      </div>
 
       <section className="mt-10">
         <h2 className="text-2xl">

@@ -24,15 +24,17 @@ export default async function CoachSetupPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="label-mono">{profile ? 'Your profile' : 'Step 2 of 2'}</p>
-      <h1 className="mt-3 text-4xl">
-        {profile ? 'Edit your profile' : 'Set up your coaching profile'}
-      </h1>
-      <p className="mt-3 max-w-prose text-slate">
+      <div className="text-center">
+        <p className="label-mono">{profile ? 'Your profile' : 'Step 2 of 2'}</p>
+        <h1 className="mt-3 text-4xl">
+          {profile ? 'Edit your profile' : 'Set up your coaching profile'}
+        </h1>
+        <p className="mx-auto mt-3 max-w-prose text-slate">
         {profile
           ? 'Changes go live immediately. Your approval status is unaffected.'
-          : 'Students see this before they book. Be specific about what you can actually help with.'}
-      </p>
+            : 'Students see this before they book. Be specific about what you can actually help with.'}
+        </p>
+      </div>
 
       <CoachSetupForm
         existing={
