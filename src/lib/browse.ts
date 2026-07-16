@@ -1,5 +1,5 @@
 import 'server-only'
-import { and, asc, eq, gte, ilike, inArray, lte, or, sql } from 'drizzle-orm'
+import { and, asc, eq, gte, inArray, lte, sql } from 'drizzle-orm'
 import { db } from '@/db'
 import { coachOfferings, coachProfiles, users } from '@/db/schema'
 
@@ -27,8 +27,6 @@ export type BrowseFilters = {
   industry?: string
   maxPriceCents?: number
   lengthMinutes?: number
-  /** Free-text search across name, role and specialties. */
-  q?: string
 }
 
 export async function listIndustries(): Promise<string[]> {
@@ -52,28 +50,6 @@ export async function browseCoaches(filters: BrowseFilters = {}): Promise<CoachC
   if (filters.industry) conditions.push(eq(coachProfiles.industry, filters.industry))
   if (filters.lengthMinutes) conditions.push(eq(coachOfferings.lengthMinutes, filters.lengthMinutes))
   if (filters.maxPriceCents) conditions.push(lte(coachOfferings.priceCents, filters.maxPriceCents))
-
-  /**
-   * Free-text search. ILIKE across the fields a student would actually type into
-   * ("Stripe", "banking", "resume"), including the specialties array via array_to_string
-   * so "system design" matches a tag.
-   *
-   * Deliberately not full-text search: at this roster size ILIKE is instant, and tsvector
-   * would add ranking, a GIN index and stemming surprises for no benefit yet. Revisit at
-   * a scale where it matters.
-   */
-  const q = filters.q?.trim()
-  if (q) {
-    const needle = `%${q}%`
-    const match = or(
-      ilike(users.fullName, needle),
-      ilike(coachProfiles.currentTitle, needle),
-      ilike(coachProfiles.industry, needle),
-      ilike(coachProfiles.bio, needle),
-      sql`array_to_string(${coachProfiles.specialties}, ' ') ILIKE ${needle}`,
-    )
-    if (match) conditions.push(match)
-  }
 
   const rows = await db
     .select({

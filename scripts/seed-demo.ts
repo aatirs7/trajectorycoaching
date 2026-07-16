@@ -13,9 +13,8 @@
  *   carry generated portraits: resolveHeadshot() in src/lib/headshot.ts refuses to render
  *   a placeholder face on any profile WITHOUT it, so a real coach can never show a fake
  *   face while the site claims every coach is verified against their employer.
- * - Portraits come from randomuser.me (stock headshots) and are chosen per persona, not
- *   hashed from an id — a "random face" service returns holiday snaps and art shots, and
- *   mismatched faces read as careless on a page claiming these are real people.
+ * - Portraits are generated (i.pravatar.cc), not photographs of real people. They're
+ *   deterministic per coach, so the same demo coach always has the same face.
  * - --undo refuses to touch anything without the prefix.
  *
  * Builds its own DB client rather than importing src/db, which is 'server-only' and
@@ -49,9 +48,6 @@ type DemoCoach = {
   linkedinUrl: string
   employerNote?: string
   referralCode: string
-  /** randomuser.me portrait path, e.g. "women/44". Authored per persona — see
-   *  seedHeadshotUrl() for why it isn't derived from an id. */
-  portrait: string
   /** Short tags for the card, drawn from what the bio actually says they help with. */
   specialties: string[]
   offerings: Array<{ lengthMinutes: number; priceCents: number }>
@@ -68,7 +64,6 @@ const COACHES: DemoCoach[] = [
     linkedinUrl: 'https://www.linkedin.com/in/example-maya-rao',
     employerNote: 'Cannot discuss live deals or anything non-public.',
     referralCode: 'MRDEMO01',
-    portrait: 'women/44',
     specialties: ["Non-target","SA recruiting","Networking"],
     offerings: [
       { lengthMinutes: 30, priceCents: 7500 },
@@ -84,7 +79,6 @@ const COACHES: DemoCoach[] = [
     bio: "I've been on both sides of about 200 interview loops now, most recently as an interviewer at Stripe.\n\nWhat I'm actually useful for: figuring out why you're getting rejected after the onsite, system design when you've never designed a system, and deciding between offers. If your fundamentals are fine and something else is going wrong, I can usually find it in one session.",
     linkedinUrl: 'https://www.linkedin.com/in/example-daniel-osei',
     referralCode: 'DODEMO02',
-    portrait: 'men/32',
     specialties: ["Interview prep","System design","Offer negotiation"],
     offerings: [
       { lengthMinutes: 30, priceCents: 6500 },
@@ -102,7 +96,6 @@ const COACHES: DemoCoach[] = [
     linkedinUrl: 'https://www.linkedin.com/in/example-priya-venkatesan',
     employerNote: 'Views are my own; nothing client-specific.',
     referralCode: 'PVDEMO03',
-    portrait: 'women/68',
     specialties: ["Case prep","PEI","MBB recruiting"],
     offerings: [
       { lengthMinutes: 45, priceCents: 11000 },
@@ -118,7 +111,6 @@ const COACHES: DemoCoach[] = [
     bio: "I switched into PM from design, so I'm a good person to talk to if you don't have the 'standard' background and are wondering whether that's fatal. It isn't, usually.\n\nI help with breaking into APM programs, PM interview loops, and the thing nobody tells you: how to talk about work you did on a team without either overclaiming or disappearing from your own story.",
     linkedinUrl: 'https://www.linkedin.com/in/example-jordan-whitfield',
     referralCode: 'JWDEMO04',
-    portrait: 'men/75',
     specialties: ["APM programs","Career switching","PM interviews"],
     offerings: [
       { lengthMinutes: 30, priceCents: 7000 },
@@ -134,7 +126,6 @@ const COACHES: DemoCoach[] = [
     bio: "I applied to med school twice. The second time worked, and the difference wasn't my MCAT.\n\nI help pre-meds with the parts that actually move the needle: what your personal statement is really saying, how to talk about a gap year or a reapplication without apologizing for it, and whether the clinical experience you have is the clinical experience they want.",
     linkedinUrl: 'https://www.linkedin.com/in/example-aisha-mensah',
     referralCode: 'AMDEMO05',
-    portrait: 'women/90',
     specialties: ["Med school apps","Personal statement","Reapplying"],
     offerings: [
       { lengthMinutes: 30, priceCents: 5500 },
@@ -151,7 +142,6 @@ const COACHES: DemoCoach[] = [
     linkedinUrl: 'https://www.linkedin.com/in/example-nadia-haddad',
     employerNote: 'Nothing about customers, incidents, or internal tooling.',
     referralCode: 'NHDEMO07',
-    portrait: 'women/26',
     specialties: ["Blue team","Certs & home lab","Breaking in"],
     offerings: [
       { lengthMinutes: 30, priceCents: 6000 },
@@ -168,7 +158,6 @@ const COACHES: DemoCoach[] = [
     linkedinUrl: 'https://www.linkedin.com/in/example-tom-brennan',
     employerNote: 'Nothing client- or matter-specific.',
     referralCode: 'TBDEMO06',
-    portrait: 'men/54',
     specialties: ["Law school apps","OCI","Biglaw tradeoffs"],
     offerings: [
       { lengthMinutes: 30, priceCents: 8000 },
@@ -213,8 +202,12 @@ async function seed() {
       })
       .returning()
 
-    /** Authored per persona, so a reseed never reshuffles anyone's face. */
-    const headshotUrl = seedHeadshotUrl(c.portrait)
+    /**
+     * Deterministic per coach: same demo coach, same face, every reseed. Keyed on the
+     * stable slug rather than the uuid so re-running after an --undo doesn't reshuffle
+     * everyone's portrait.
+     */
+    const headshotUrl = seedHeadshotUrl(c.slug)
 
     await db
       .insert(coachProfiles)

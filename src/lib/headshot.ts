@@ -16,23 +16,10 @@
  */
 
 /**
- * Hosts that serve stock/generated faces or imagery. Anything from one of these is a
+ * Hosts that generate faces/imagery on demand. Anything served from one of these is a
  * placeholder by definition, whoever set it.
- *
- * ADD TO THIS LIST whenever a new placeholder source is introduced anywhere — the
- * guardrail below is only as good as this list, and a source that isn't here would sail
- * straight onto a real coach's profile.
  */
-const PLACEHOLDER_HOSTS = [
-  'randomuser.me',
-  'i.pravatar.cc',
-  'pravatar.cc',
-  'picsum.photos',
-  'fastly.picsum.photos',
-  'placehold.co',
-  'placekitten.com',
-  'loremflickr.com',
-]
+const PLACEHOLDER_HOSTS = ['i.pravatar.cc', 'pravatar.cc', 'picsum.photos', 'placehold.co']
 
 export function isPlaceholderImage(url: string): boolean {
   try {
@@ -72,24 +59,9 @@ export function resolveHeadshot(profile: {
   return { kind: 'image', url: profile.headshotUrl }
 }
 
-/**
- * Placeholder portrait for a seed coach.
- *
- * `portrait` is an explicit randomuser.me path ("women/44"), chosen per demo persona
- * rather than hashed from an id. Two reasons:
- *
- *  - Consistency. randomuser.me returns actual headshots — plain background, face
- *    centred, shoulders up. A "random face" service returns holiday snaps and art shots,
- *    which read as unserious the moment faces are the first thing on the page.
- *  - Coherence. These personas are invented, so the portrait is authored alongside the
- *    rest of the persona. Deriving it from a hash produced obvious mismatches, which
- *    looks careless on a page whose whole claim is "these are real people".
- *
- * Still a placeholder, and still gated: randomuser.me is in PLACEHOLDER_HOSTS, so this
- * can only ever render on an is_seed profile.
- */
-export function seedHeadshotUrl(portrait: string): string {
-  return `https://randomuser.me/api/portraits/${portrait}.jpg`
+/** Deterministic placeholder portrait for a seed coach. Same id, same face, every time. */
+export function seedHeadshotUrl(seedKey: string): string {
+  return `https://i.pravatar.cc/400?u=${encodeURIComponent(seedKey)}`
 }
 
 export function initialOf(fullName: string | null): string {

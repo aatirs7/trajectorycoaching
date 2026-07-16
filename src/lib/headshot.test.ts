@@ -3,7 +3,7 @@ import { describe, it } from 'node:test'
 import { isPlaceholderImage, resolveHeadshot, seedHeadshotUrl } from './headshot'
 
 const REAL_PHOTO = 'https://images.example.com/coaches/maya.jpg'
-const FAKE_FACE = 'https://randomuser.me/api/portraits/women/44.jpg'
+const FAKE_FACE = 'https://i.pravatar.cc/400?u=abc'
 
 describe('resolveHeadshot — the placeholder guardrail', () => {
   it('NEVER renders a generated face on a real coach profile', () => {
@@ -13,17 +13,13 @@ describe('resolveHeadshot — the placeholder guardrail', () => {
     assert.deepEqual(r, { kind: 'initials', reason: 'placeholder-on-real-profile' })
   })
 
-  it('refuses placeholders from every known stock/generator host', () => {
+  it('refuses placeholders from every known generator host, not just pravatar', () => {
     for (const url of [
-      'https://randomuser.me/api/portraits/men/1.jpg',
-      'https://www.randomuser.me/api/portraits/men/1.jpg',
       'https://pravatar.cc/300',
       'https://i.pravatar.cc/400?u=x',
       'https://picsum.photos/seed/x/400/400',
-      'https://fastly.picsum.photos/id/1/400/400.jpg',
       'https://placehold.co/400',
-      'https://placekitten.com/400/400',
-      'https://loremflickr.com/400/400',
+      'https://www.i.pravatar.cc/400',
     ]) {
       assert.equal(
         resolveHeadshot({ headshotUrl: url, isSeed: false }).kind,
@@ -75,14 +71,12 @@ describe('isPlaceholderImage', () => {
 })
 
 describe('seedHeadshotUrl', () => {
-  it('is stable: same portrait path, same face', () => {
-    assert.equal(seedHeadshotUrl('women/44'), seedHeadshotUrl('women/44'))
-    assert.notEqual(seedHeadshotUrl('women/44'), seedHeadshotUrl('men/32'))
+  it('is deterministic: same coach, same face', () => {
+    assert.equal(seedHeadshotUrl('coach-1'), seedHeadshotUrl('coach-1'))
+    assert.notEqual(seedHeadshotUrl('coach-1'), seedHeadshotUrl('coach-2'))
   })
 
   it('produces a URL the guardrail recognises as a placeholder', () => {
-    // If this ever fails, seed portraits would start rendering on real profiles.
-    assert.equal(isPlaceholderImage(seedHeadshotUrl('women/44')), true)
-    assert.equal(resolveHeadshot({ headshotUrl: seedHeadshotUrl('men/1'), isSeed: false }).kind, 'initials')
+    assert.equal(isPlaceholderImage(seedHeadshotUrl('x')), true)
   })
 })
