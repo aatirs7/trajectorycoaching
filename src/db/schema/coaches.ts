@@ -40,6 +40,14 @@ export const coachProfiles = pgTable(
     headshotUrl: text('headshot_url'),
 
     /**
+     * Employer visibility (from the coach application §6). When true, the public card and
+     * profile show `general_title` ("Finance Professional") instead of `current_title`,
+     * for coaches whose employer doesn't allow the firm name to be shown.
+     */
+    displayEmployerGenerally: boolean('display_employer_generally').notNull().default(false),
+    generalTitle: text('general_title'),
+
+    /**
      * Up to a few short tags rendered on the coach card ("SA recruiting", "System
      * design"). jsonb rather than a join table: they're display-only, never queried or
      * filtered on, and a table would buy nothing but joins.

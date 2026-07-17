@@ -1,5 +1,6 @@
 import { SignInButton, UserButton } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { getDbUser } from '@/lib/auth/ensure-user'
@@ -43,8 +44,11 @@ export async function SiteHeader() {
   return (
     <header className="border-b border-line/15">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-lg tracking-tight">
-          Trajectory
+        <Link href="/" aria-label="Trajectory home" className="flex items-center gap-2.5">
+          {/* Transparent PNG logo lockup; sits on the ivory header. next/image resizes the
+              1024px source down to the served size. */}
+          <Image src="/logo-full.png" alt="Trajectory" width={40} height={40} priority className="size-10" />
+          <span className="font-display text-lg tracking-tight">Trajectory</span>
         </Link>
 
         <nav className="flex items-center gap-1">

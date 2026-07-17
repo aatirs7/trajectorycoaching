@@ -26,6 +26,8 @@ type Existing = {
   linkedinUrl: string | null
   employerNote: string | null
   calendlySchedulingUrl: string | null
+  displayEmployerGenerally: boolean
+  generalTitle: string | null
   handbookSignedName: string | null
   handbookSignedAt: string | null
   offerings: Array<{ lengthMinutes: number; priceCents: number }>
@@ -122,11 +124,21 @@ function PhotoUploader({ existing }: { existing: Existing }) {
   )
 }
 
-export function CoachSetupForm({ existing }: { existing: Existing }) {
+/** Values pre-filled from an accepted application, used only when there's no profile yet. */
+export type Prefill = {
+  industry?: string
+  currentTitle?: string
+  displayEmployerGenerally?: boolean
+} | null
+
+export function CoachSetupForm({ existing, prefill }: { existing: Existing; prefill?: Prefill }) {
   const [state, action, pending] = useActionState<CoachSetupState, FormData>(saveCoachProfile, {})
 
   const [lengths, setLengths] = useState<number[]>(
     existing?.offerings.map((o) => o.lengthMinutes) ?? [30],
+  )
+  const [generalDisplay, setGeneralDisplay] = useState(
+    existing?.displayEmployerGenerally ?? prefill?.displayEmployerGenerally ?? false,
   )
 
   const err = state.errors ?? {}
@@ -141,7 +153,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
 
       <form action={action} className="space-y-7">
         <Field label="What field are you in?" errors={err.industry}>
-          <Select name="industry" defaultValue={existing?.industry} required>
+          <Select name="industry" defaultValue={existing?.industry ?? prefill?.industry} required>
             <SelectTrigger className="w-full sm:w-80">
               <SelectValue placeholder="Pick your field" />
             </SelectTrigger>
@@ -164,7 +176,7 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
           <Input
             id="currentTitle"
             name="currentTitle"
-            defaultValue={existing?.currentTitle}
+            defaultValue={existing?.currentTitle ?? prefill?.currentTitle}
             placeholder="Analyst at Goldman Sachs"
             required
           />
@@ -219,6 +231,51 @@ export function CoachSetupForm({ existing }: { existing: Existing }) {
             defaultValue={existing?.employerNote ?? ''}
             rows={2}
           />
+        </Field>
+
+        <Field
+          label="How should your employer show on your profile?"
+          hint="Some coaches can't show their firm's name publicly."
+          errors={err.generalTitle}
+        >
+          <div className="space-y-2">
+            {[
+              { value: 'show_name', label: 'Show my current role and company' },
+              { value: 'describe_generally', label: 'Describe generally (e.g. Finance Professional)' },
+            ].map((o) => {
+              const checked = (o.value === 'describe_generally') === generalDisplay
+              return (
+                <label
+                  key={o.value}
+                  className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors ${
+                    checked ? 'border-gold bg-secondary' : 'border-line/25 hover:border-line/50'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="employerVisibility"
+                    value={o.value}
+                    checked={checked}
+                    onChange={() => setGeneralDisplay(o.value === 'describe_generally')}
+                    className="sr-only"
+                  />
+                  <span aria-hidden className={`size-3.5 rounded-full border-2 ${checked ? 'border-gold bg-gold' : 'border-line/40'}`} />
+                  {o.label}
+                </label>
+              )
+            })}
+            {generalDisplay ? (
+              <Input
+                name="generalTitle"
+                defaultValue={existing?.generalTitle ?? ''}
+                placeholder="Finance Professional"
+                aria-label="General title to show instead of your employer"
+                className="mt-2"
+              />
+            ) : (
+              <input type="hidden" name="generalTitle" value="" />
+            )}
+          </div>
         </Field>
 
         <Field

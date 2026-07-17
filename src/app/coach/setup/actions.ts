@@ -54,6 +54,8 @@ export async function saveCoachProfile(
     linkedinUrl: formData.get('linkedinUrl') ?? '',
     employerNote: formData.get('employerNote') ?? '',
     calendlySchedulingUrl: formData.get('calendlySchedulingUrl') ?? '',
+    employerVisibility: formData.get('employerVisibility') ?? 'show_name',
+    generalTitle: formData.get('generalTitle') ?? '',
     offerings,
   })
 
@@ -89,6 +91,8 @@ export async function saveCoachProfile(
           handbookVersion: AGREEMENT_VERSION,
         }
 
+  const displayEmployerGenerally = v.employerVisibility === 'describe_generally'
+
   const textValues = {
     industry: v.industry,
     currentTitle: v.currentTitle,
@@ -96,6 +100,8 @@ export async function saveCoachProfile(
     linkedinUrl: v.linkedinUrl || null,
     employerNote: v.employerNote || null,
     calendlySchedulingUrl: v.calendlySchedulingUrl || null,
+    displayEmployerGenerally,
+    generalTitle: displayEmployerGenerally ? v.generalTitle || null : null,
     ...signature,
   }
 

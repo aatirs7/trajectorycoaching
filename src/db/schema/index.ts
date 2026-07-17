@@ -18,6 +18,7 @@ export * from './links'
 export * from './sessions'
 export * from './trust'
 export * from './tasks'
+export * from './applications'
 
 /*
  * DEFERRED — spec §4 "Phase 1.5":

@@ -237,6 +237,58 @@ export function CoachRejectedEmail(props: { coachName: string; reason?: string }
   )
 }
 
+export function ApplicationReceivedEmail(props: { firstName: string }) {
+  return (
+    <Shell preview="We got your Trajectory coach application">
+      <Heading style={h1}>Application received</Heading>
+      <Text style={text}>Hi {props.firstName},</Text>
+      <Text style={text}>
+        Thanks for your interest in coaching with Trajectory. We&rsquo;ve got your
+        application and we&rsquo;ll follow up once we&rsquo;ve reviewed it.
+      </Text>
+      <Text style={muted}>No action needed from you right now.</Text>
+    </Shell>
+  )
+}
+
+export function NewApplicationEmail(props: {
+  fullName: string
+  field: string
+  roleCompany: string
+  reviewUrl: string
+}) {
+  return (
+    <Shell preview={`New coach application: ${props.fullName}`}>
+      <Heading style={h1}>New coach application</Heading>
+      <Text style={text}>
+        <strong>{props.fullName}</strong> — {props.field}
+      </Text>
+      <Text style={text}>{props.roleCompany}</Text>
+      <Link href={props.reviewUrl} style={{ ...button, backgroundColor: GOLD, color: INK }}>
+        Review it
+      </Link>
+    </Shell>
+  )
+}
+
+export function ApplicationAcceptedEmail(props: { firstName: string; setupUrl: string }) {
+  return (
+    <Shell preview="You're in — set up your Trajectory coaching profile">
+      <Heading style={h1}>You&rsquo;re in</Heading>
+      <Text style={text}>Hi {props.firstName},</Text>
+      <Text style={text}>
+        We&rsquo;d love to have you coach on Trajectory. Create your account and set up your
+        profile — add a photo, confirm your rates, connect payouts and your calendar — and
+        you&rsquo;ll go live automatically. We&rsquo;ve pre-filled what we can from your
+        application.
+      </Text>
+      <Link href={props.setupUrl} style={button}>
+        Set up your profile
+      </Link>
+    </Shell>
+  )
+}
+
 export function NewReportEmail(props: {
   reportId: string
   category: string

@@ -68,7 +68,11 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
 
             <div>
               <h1 className="text-4xl leading-tight">{coach.fullName ?? 'Coach'}</h1>
-              <p className="mt-1 text-lg text-slate">{profile.currentTitle}</p>
+              <p className="mt-1 text-lg text-slate">
+                {profile.displayEmployerGenerally && profile.generalTitle
+                  ? profile.generalTitle
+                  : profile.currentTitle}
+              </p>
               <Badge
                 variant="secondary"
                 className="mt-3 font-mono text-[11px] tracking-wider uppercase"

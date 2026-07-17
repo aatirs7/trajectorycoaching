@@ -82,6 +82,8 @@ export async function browseCoaches(filters: BrowseFilters = {}): Promise<CoachC
       isSeed: coachProfiles.isSeed,
       industry: coachProfiles.industry,
       currentTitle: coachProfiles.currentTitle,
+      displayEmployerGenerally: coachProfiles.displayEmployerGenerally,
+      generalTitle: coachProfiles.generalTitle,
       bio: coachProfiles.bio,
       specialties: coachProfiles.specialties,
       priceCents: coachOfferings.priceCents,
@@ -112,7 +114,8 @@ export async function browseCoaches(filters: BrowseFilters = {}): Promise<CoachC
       headshotUrl: r.headshotUrl,
       isSeed: r.isSeed,
       industry: r.industry,
-      currentTitle: r.currentTitle,
+      // Respect the coach's employer-visibility choice on the public card.
+      currentTitle: r.displayEmployerGenerally && r.generalTitle ? r.generalTitle : r.currentTitle,
       bio: r.bio,
       specialties: r.specialties,
       startingPriceCents: r.priceCents,

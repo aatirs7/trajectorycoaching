@@ -26,7 +26,7 @@ export function SiteFooter() {
           </div>
           <div className="space-y-2">
             <p className="font-mono text-[10px] tracking-widest text-gold uppercase">Coaches</p>
-            <Link href="/sign-up" className="block text-paper/70 hover:text-paper">
+            <Link href="/coaches/apply" className="block text-paper/70 hover:text-paper">
               Become a coach
             </Link>
             <Link href="/coach/handbook" className="block text-paper/70 hover:text-paper">

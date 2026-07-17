@@ -70,7 +70,7 @@ export default async function Home() {
               </Button>
               {!user ? (
                 <Button asChild size="lg" variant="outline">
-                  <Link href="/sign-up">Coach on Trajectory</Link>
+                  <Link href="/coaches/apply">Coach on Trajectory</Link>
                 </Button>
               ) : null}
             </div>
@@ -190,7 +190,7 @@ export default async function Home() {
             they go live.
           </p>
           <Button asChild size="lg" className="mt-8 bg-gold text-ink hover:bg-gold/90">
-            <Link href="/sign-up">Become a coach</Link>
+            <Link href="/coaches/apply">Become a coach</Link>
           </Button>
         </div>
       </section>

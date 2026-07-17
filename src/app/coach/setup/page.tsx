@@ -1,9 +1,10 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
-import { CoachSetupForm } from './setup-form'
+import { CoachSetupForm, type Prefill } from './setup-form'
 import { db } from '@/db'
-import { coachOfferings, coachProfiles } from '@/db/schema'
+import { coachApplications, coachOfferings, coachProfiles } from '@/db/schema'
 import { requireUser } from '@/lib/auth/guards'
+import { INDUSTRIES } from '@/lib/coach-schema'
 
 export const metadata = { title: 'Set up your profile' }
 
@@ -21,6 +22,23 @@ export default async function CoachSetupPage() {
   const offerings = await db.query.coachOfferings.findMany({
     where: eq(coachOfferings.coachId, user.id),
   })
+
+  // Pre-fill from an accepted application matching this coach's email (spec: accept
+  // invites into setup "with their data pre-filled"). Only when there's no profile yet.
+  let prefill: Prefill = null
+  if (!profile) {
+    const app = await db.query.coachApplications.findFirst({
+      where: and(eq(coachApplications.email, user.email), eq(coachApplications.status, 'accepted')),
+    })
+    if (app) {
+      const field = INDUSTRIES.includes(app.field as (typeof INDUSTRIES)[number]) ? app.field : undefined
+      prefill = {
+        industry: field,
+        currentTitle: app.roleCompany,
+        displayEmployerGenerally: app.employerVisibility === 'describe_generally',
+      }
+    }
+  }
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -47,6 +65,8 @@ export default async function CoachSetupPage() {
                 linkedinUrl: profile.linkedinUrl,
                 employerNote: profile.employerNote,
                 calendlySchedulingUrl: profile.calendlySchedulingUrl,
+                displayEmployerGenerally: profile.displayEmployerGenerally,
+                generalTitle: profile.generalTitle,
                 handbookSignedName: profile.handbookSignedName,
                 handbookSignedAt: profile.handbookAckAt?.toISOString() ?? null,
                 offerings: offerings
@@ -55,6 +75,7 @@ export default async function CoachSetupPage() {
               }
             : null
         }
+        prefill={prefill}
       />
     </main>
   )

@@ -100,6 +100,9 @@ export const coachProfileSchema = z.object({
   headshotUrl: z.string().trim().url('Must be a valid URL').optional().or(z.literal('')),
   linkedinUrl,
   employerNote: z.string().trim().max(500).optional().or(z.literal('')),
+  /** From the application §6 — how the employer shows on the public profile. */
+  employerVisibility: z.enum(['show_name', 'describe_generally']).default('show_name'),
+  generalTitle: z.string().trim().max(160).optional().or(z.literal('')),
   offerings: z
     .array(offeringSchema)
     .min(1, 'Offer at least one session length')
