@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card'
 import { db } from '@/db'
 import { coachOfferings, reports, users } from '@/db/schema'
 import { requireAdmin } from '@/lib/auth/guards'
+import { ConsoleHeader } from '@/components/console-shell'
 import { platformStats } from '@/lib/admin-stats'
 import { isCoachLive } from '@/lib/coach-publish'
 import { formatPrice } from '@/lib/coach-schema'
@@ -42,11 +43,8 @@ export default async function AdminHome() {
   const signed = profiles.filter((p) => p.handbookAckAt).length
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin</p>
-        <h1 className="mt-3 text-4xl">Control room</h1>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader title="Dashboard" description="The state of the business at a glance." />
 
       {!bookingEnabled() ? (
         <Card className="mt-8 border-gold bg-secondary p-5">
@@ -69,14 +67,6 @@ export default async function AdminHome() {
         <Stat label="Open reports" value={String(openReports.length)} href="/admin/reports" />
       </div>
 
-      <nav className="mt-10 space-y-3">
-        <AdminLink href="/admin/coaches" title="Coaches" blurb="Review agreements and stats; suspend or reinstate." />
-        <AdminLink href="/admin/students" title="Students" blurb="See who signed up and their onboarding survey." />
-        <AdminLink href="/admin/reports" title="Reports" blurb="Trust & safety queue." />
-        <AdminLink href="/admin/users" title="Accounts" blurb="Suspend or reinstate any account." />
-        <AdminLink href="/admin/integrations" title="Integrations" blurb="Which third-party keys are wired up." />
-        <AdminLink href="/ops" title="Ops board" blurb="The shared to-do list for launch." />
-      </nav>
     </main>
   )
 }
@@ -87,17 +77,6 @@ function Stat({ label, value, href }: { label: string; value: string; href: stri
       <Card className="border-line/20 p-5 transition-colors hover:border-gold">
         <p className="label-mono">{label}</p>
         <p className="mt-2 font-display text-3xl">{value}</p>
-      </Card>
-    </Link>
-  )
-}
-
-function AdminLink({ href, title, blurb }: { href: string; title: string; blurb: string }) {
-  return (
-    <Link href={href} className="block">
-      <Card className="border-line/20 p-5 transition-colors hover:border-gold">
-        <h2 className="text-lg">{title}</h2>
-        <p className="mt-1 text-sm text-slate">{blurb}</p>
       </Card>
     </Link>
   )

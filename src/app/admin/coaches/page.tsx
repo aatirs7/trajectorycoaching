@@ -1,5 +1,6 @@
 import { desc, inArray } from 'drizzle-orm'
 import Link from 'next/link'
+import { ConsoleHeader } from '@/components/console-shell'
 import { StatusActions } from './review-actions'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -61,15 +62,8 @@ export default async function AdminCoachesPage() {
   const incomplete = rows.filter((r) => !r.live && r.profile.status !== 'suspended')
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin</p>
-        <h1 className="mt-3 text-4xl">Coaches</h1>
-        <p className="mx-auto mt-3 max-w-prose text-slate">
-          Coaches go live automatically when their checklist is complete. You can suspend
-          anyone for safety.
-        </p>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader title="Coaches" description="Coaches go live automatically when their checklist is complete. You can suspend anyone for safety." />
 
       <Section title="Live" rows={live} empty="No live coaches yet." />
       <Section title="Still setting up" rows={incomplete} empty="Nobody mid-setup." />

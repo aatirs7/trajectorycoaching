@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { ConsoleHeader } from '@/components/console-shell'
 import { requireAdmin } from '@/lib/auth/guards'
 import { bookingEnabled, integrationStatus } from '@/lib/env'
 
@@ -78,16 +79,11 @@ export default async function IntegrationsPage() {
   const ready = bookingEnabled() && s.stripeWebhook && s.calendlyWebhook
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin</p>
-        <h1 className="mt-3 text-4xl">Integrations</h1>
-        <p className="mx-auto mt-3 max-w-prose text-slate">
-        Everything here degrades quietly when unconfigured, so the app runs before the
-        accounts exist. That&rsquo;s useful in development and hazardous at launch, so this page
-          is the check.
-        </p>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader
+        title="Integrations"
+        description="Everything here degrades quietly when unconfigured, so the app runs before the accounts exist. That's useful in development and hazardous at launch, so this page is the check."
+      />
 
       <Card
         className={`mt-8 border-line/20 p-6 ${ready ? '' : 'border-gold bg-secondary'}`}

@@ -1,5 +1,6 @@
 import { desc, eq } from 'drizzle-orm'
 import Link from 'next/link'
+import { ConsoleHeader } from '@/components/console-shell'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { db } from '@/db'
@@ -27,14 +28,8 @@ export default async function AdminStudentsPage() {
   const surveyByUser = new Map(surveys.map((s) => [s.userId, s]))
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin</p>
-        <h1 className="mt-3 text-4xl">Students</h1>
-        <p className="mx-auto mt-3 max-w-prose text-slate">
-          Everyone who signed up as a student, and where they are with the onboarding survey.
-        </p>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader title="Students" description="Everyone who signed up as a student, and where they are with the onboarding survey." />
 
       {students.length === 0 ? (
         <p className="mt-10 text-center text-sm text-slate">No students yet.</p>

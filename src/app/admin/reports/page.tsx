@@ -1,5 +1,6 @@
 import { asc, desc, inArray } from 'drizzle-orm'
 import Link from 'next/link'
+import { ConsoleHeader } from '@/components/console-shell'
 import { ReportActions } from './report-actions'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -28,11 +29,8 @@ export default async function AdminReportsPage() {
   const closed = rows.filter((r) => r.status !== 'open')
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin</p>
-        <h1 className="mt-3 text-4xl">Reports</h1>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader title="Reports" />
 
       <section className="mt-10">
         <h2 className="text-2xl">

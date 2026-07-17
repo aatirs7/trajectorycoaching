@@ -53,46 +53,42 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
 
   return (
     <main className={`flex-1 ${pending ? 'opacity-90' : ''}`}>
-      <section className="border-b border-line/15 bg-sand">
-        <div className="mx-auto w-full max-w-4xl px-6 py-10">
-          <p className="label-mono">Internal</p>
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-            <h1 className="text-section">Trajectory Ops</h1>
-            <p className="font-display text-xl text-slate">
-              {doneCount} of {tasks.length} done
-            </p>
-          </div>
-
-          {/* Controls */}
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              {(['All', ...OPS_OWNERS] as OwnerFilter[]).map((o) => (
-                <button
-                  key={o}
-                  type="button"
-                  onClick={() => setOwnerFilter(o)}
-                  className={`rounded-full px-3 py-1 text-sm transition-colors ${
-                    ownerFilter === o ? 'bg-ink text-paper' : 'text-slate hover:text-ink'
-                  }`}
-                >
-                  {o}
-                </button>
-              ))}
-            </div>
-            <label className="ml-auto flex items-center gap-2 text-sm text-slate">
-              <input
-                type="checkbox"
-                checked={hideDone}
-                onChange={(e) => setHideDone(e.target.checked)}
-                className="size-4 accent-gold"
-              />
-              Hide completed
-            </label>
-          </div>
+      <div className="mx-auto w-full max-w-5xl px-6 py-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h1 className="text-3xl">Ops board</h1>
+          <p className="font-display text-xl text-slate">
+            {doneCount} of {tasks.length} done
+          </p>
         </div>
-      </section>
 
-      <div className="mx-auto w-full max-w-4xl px-6 py-10">
+        {/* Controls */}
+        <div className="mt-6 flex flex-wrap items-center gap-4 border-y border-line/15 py-4">
+          <div className="flex items-center gap-1.5">
+            {(['All', ...OPS_OWNERS] as OwnerFilter[]).map((o) => (
+              <button
+                key={o}
+                type="button"
+                onClick={() => setOwnerFilter(o)}
+                className={`rounded-full px-3 py-1 text-sm transition-colors ${
+                  ownerFilter === o ? 'bg-ink text-paper' : 'text-slate hover:text-ink'
+                }`}
+              >
+                {o}
+              </button>
+            ))}
+          </div>
+          <label className="ml-auto flex items-center gap-2 text-sm text-slate">
+            <input
+              type="checkbox"
+              checked={hideDone}
+              onChange={(e) => setHideDone(e.target.checked)}
+              className="size-4 accent-gold"
+            />
+            Hide completed
+          </label>
+        </div>
+
+        <div className="mt-8">
         {/* This week strip */}
         {thisWeek.length > 0 ? (
           <div className="mb-10 rounded-2xl bg-ink p-6 text-paper">
@@ -155,6 +151,7 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
             </section>
           )
         })}
+        </div>
       </div>
     </main>
   )

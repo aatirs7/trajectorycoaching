@@ -1,5 +1,5 @@
 import { asc, desc } from 'drizzle-orm'
-import Link from 'next/link'
+import { ConsoleHeader } from '@/components/console-shell'
 import { ReviewActions } from './review-actions'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -27,17 +27,11 @@ export default async function ApplicationsPage() {
   const decided = apps.filter((a) => a.status === 'accepted' || a.status === 'rejected')
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-14">
-      <div className="text-center">
-        <p className="label-mono">Admin · Ops</p>
-        <h1 className="mt-3 text-4xl">Coach applications</h1>
-        <p className="mx-auto mt-3 max-w-prose text-slate">
-          Review applicants and accept them into setup, or decline.{' '}
-          <Link href="/ops" className="underline decoration-gold underline-offset-4 hover:text-ink">
-            Back to the board
-          </Link>
-        </p>
-      </div>
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <ConsoleHeader
+        title="Coach applications"
+        description="Review applicants and accept them into setup, or decline."
+      />
 
       <Section title="To review" apps={open} empty="Nothing waiting." />
       {decided.length > 0 ? <Section title="Decided" apps={decided} empty="" /> : null}
