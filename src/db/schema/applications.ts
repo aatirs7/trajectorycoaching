@@ -28,7 +28,7 @@ export const coachApplications = pgTable(
     sessionsPerMonth: text('sessions_per_month').notNull(),
     /** { days: string[], times: string[] } */
     availability: jsonb('availability').$type<{ days: string[]; times: string[] }>().notNull(),
-    startTiming: text('start_timing').notNull(), // "mid_august" | "other"
+    startTiming: text('start_timing').notNull(), // "immediately" | "other"
     startOther: text('start_other'),
 
     // pricing

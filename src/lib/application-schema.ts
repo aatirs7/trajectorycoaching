@@ -56,8 +56,8 @@ export const EMPLOYER_VISIBILITY = [
 ] as const
 
 export const START_TIMING = [
-  { value: 'mid_august', label: 'Yes — once the platform is set (estimate: mid-August)' },
-  { value: 'other', label: 'No / a different time' },
+  { value: 'immediately', label: 'Immediately' },
+  { value: 'other', label: 'Other' },
 ] as const
 
 const nonEmpty = (label: string) => z.string().trim().min(1, `${label} is required`).max(2000)
@@ -80,7 +80,7 @@ export const applicationSchema = z
     sessionsPerMonth: z.enum(SESSIONS_PER_MONTH),
     days: z.array(z.enum(AVAIL_DAYS)).min(1, 'Pick at least one day'),
     times: z.array(z.enum(['morning', 'afternoon', 'evening'])).min(1, 'Pick at least one time'),
-    startTiming: z.enum(['mid_august', 'other']),
+    startTiming: z.enum(['immediately', 'other']),
     startOther: z.string().trim().max(300).optional().or(z.literal('')),
 
     rate30: nonEmpty('30-minute rate').max(60),
@@ -110,7 +110,7 @@ export const applicationSchema = z
       ctx.addIssue({ code: 'custom', path: ['coachingOther'], message: 'Tell us what else' })
     }
     if (v.startTiming === 'other' && !v.startOther) {
-      ctx.addIssue({ code: 'custom', path: ['startOther'], message: 'When could you start?' })
+      ctx.addIssue({ code: 'custom', path: ['startOther'], message: 'Please enter a date' })
     }
   })
 

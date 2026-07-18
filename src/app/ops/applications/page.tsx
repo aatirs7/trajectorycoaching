@@ -106,7 +106,7 @@ function ApplicationCard({ app }: { app: typeof coachApplications.$inferSelect }
           <Row q="Experience" a={app.yearsExperience} />
           <Row q="Sessions / month" a={app.sessionsPerMonth} />
           <Row q="Availability" a={`Days: ${app.availability.days.join(', ')} · Times: ${app.availability.times.join(', ')}`} />
-          <Row q="Start" a={app.startTiming === 'mid_august' ? 'Mid-August' : app.startOther || 'Other'} />
+          <Row q="Start" a={app.startTiming === 'immediately' ? 'Immediately' : app.startOther || 'Other'} />
           <Row q="Rates" a={[app.rate30 && `30m ${app.rate30}`, app.rate45 && `45m ${app.rate45}`, app.rate60 && `60m ${app.rate60}`].filter(Boolean).join(' · ')} />
           <Row q="Open to suggested rate" a={app.openToSuggested ? 'Yes' : 'No'} />
           <Row q="Coaching" a={[...app.coachingTypes, app.coachingOther ? `Other: ${app.coachingOther}` : ''].filter(Boolean).join(', ')} />

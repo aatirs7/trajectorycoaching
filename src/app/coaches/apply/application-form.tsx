@@ -280,7 +280,10 @@ export function ApplicationForm() {
           ) : null}
 
           {step === 3 ? (
-            <StepShell title="Availability & capacity" note="You set your own schedule.">
+            <StepShell
+              title="Availability & capacity"
+              note="Just a general sense — you’ll set your exact hours once you’re set up."
+            >
               <SelectField
                 label="Sessions per month you could realistically commit to"
                 value={form.sessionsPerMonth}
@@ -289,21 +292,21 @@ export function ApplicationForm() {
                 required
               />
               <ChipGroup
-                label="Times that generally work"
-                required
-                selected={form.times}
-                onToggle={(v) => toggle('times', v)}
-                options={AVAIL_TIMES.map((t) => ({ value: t.value, label: t.label }))}
-              />
-              <ChipGroup
-                label="Days that generally work"
+                label="Which days generally work for you?"
                 required
                 selected={form.days}
                 onToggle={(v) => toggle('days', v)}
                 options={AVAIL_DAYS.map((d) => ({ value: d, label: d }))}
               />
+              <ChipGroup
+                label="Which times generally work for you?"
+                required
+                selected={form.times}
+                onToggle={(v) => toggle('times', v)}
+                options={AVAIL_TIMES.map((t) => ({ value: t.value, label: t.label }))}
+              />
               <RadioField
-                label="Are you looking to start once the platform is set (estimate: mid-August)?"
+                label='When can you start? (If you select "Other", please input a date.)'
                 value={form.startTiming}
                 onChange={(v) => set('startTiming', v)}
                 options={START_TIMING.map((s) => ({ value: s.value, label: s.label }))}
@@ -311,9 +314,10 @@ export function ApplicationForm() {
               />
               {form.startTiming === 'other' ? (
                 <TextField
-                  label="When could you start?"
+                  label="Please enter a date"
                   value={form.startOther}
                   onChange={(v) => set('startOther', v)}
+                  placeholder="e.g. September 1, or in 4 weeks"
                   required
                 />
               ) : null}
