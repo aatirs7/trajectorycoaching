@@ -45,9 +45,23 @@ export async function SiteHeader() {
     <header className="border-b border-line/15">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="MentorReach home" className="flex items-center">
-          {/* Transparent PNG logo lockup; sits on the ivory header. next/image resizes the
-              1024px source down to the served size. */}
-          <Image src="/logo-full.png" alt="MentorReach" width={56} height={56} priority className="size-14" />
+          {/*
+           * Horizontal lockup (mark + wordmark), transparent PNG, trimmed to its artwork
+           * so there is no dead margin inflating the box. Sized by HEIGHT with width auto
+           * so the aspect ratio can never be squashed by a later tweak — the intrinsic
+           * 1041x241 is passed to next/image purely so it can reserve space and avoid CLS.
+           *
+           * The mark is ink navy, so this only works on a light surface. The footer
+           * wordmark stays live text for that reason.
+           */}
+          <Image
+            src="/logo-mentorreach.png"
+            alt="MentorReach"
+            width={1041}
+            height={241}
+            priority
+            className="h-9 w-auto"
+          />
         </Link>
 
         <nav className="flex items-center gap-1">
