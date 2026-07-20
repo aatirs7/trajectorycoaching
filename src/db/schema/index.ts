@@ -1,5 +1,5 @@
 /**
- * Trajectory Coaching — core schema (spec §4).
+ * MentorReach — core schema (spec §4).
  *
  * FK CONVENTION: every `coach_id` / `student_id` column in every table references
  * `users.id`, never `coach_profiles.id`. Join to coach_profiles via its `user_id`.

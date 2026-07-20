@@ -71,10 +71,10 @@ function Shell({ preview, children }: { preview: string; children: ReactNode }) 
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Text style={brand}>Trajectory Coaching</Text>
+          <Text style={brand}>MentorReach</Text>
           {children}
           <Hr style={hr} />
-          <Text style={muted}>Own your trajectory.</Text>
+          <Text style={muted}>Reach the people who&rsquo;ve been there.</Text>
         </Container>
       </Body>
     </Html>
@@ -211,7 +211,7 @@ export function SessionReminderEmail(props: {
 
 export function CoachApprovedEmail(props: { coachName: string; payoutsUrl: string }) {
   return (
-    <Shell preview="You're approved to coach on Trajectory">
+    <Shell preview="You're approved to coach on MentorReach">
       <Heading style={h1}>You&rsquo;re approved</Heading>
       <Text style={text}>Hi {props.coachName},</Text>
       <Text style={text}>
@@ -231,11 +231,11 @@ export function CoachApprovedEmail(props: { coachName: string; payoutsUrl: strin
 
 export function CoachRejectedEmail(props: { coachName: string; reason?: string }) {
   return (
-    <Shell preview="An update on your Trajectory application">
+    <Shell preview="An update on your MentorReach application">
       <Heading style={h1}>An update on your application</Heading>
       <Text style={text}>Hi {props.coachName},</Text>
       <Text style={text}>
-        Thanks for applying to coach on Trajectory. We&rsquo;re not moving forward with
+        Thanks for applying to coach on MentorReach. We&rsquo;re not moving forward with
         your profile at this time.
       </Text>
       {props.reason ? <Text style={text}>{props.reason}</Text> : null}
@@ -249,11 +249,11 @@ export function CoachRejectedEmail(props: { coachName: string; reason?: string }
 
 export function ApplicationReceivedEmail(props: { firstName: string }) {
   return (
-    <Shell preview="We got your Trajectory coach application">
+    <Shell preview="We got your MentorReach coach application">
       <Heading style={h1}>Application received</Heading>
       <Text style={text}>Hi {props.firstName},</Text>
       <Text style={text}>
-        Thanks for your interest in coaching with Trajectory. We&rsquo;ve got your
+        Thanks for your interest in coaching with MentorReach. We&rsquo;ve got your
         application and we&rsquo;ll follow up once we&rsquo;ve reviewed it.
       </Text>
       <Text style={muted}>No action needed from you right now.</Text>
@@ -283,12 +283,12 @@ export function NewApplicationEmail(props: {
 
 export function CoachInviteEmail(props: { firstName?: string; inviteUrl: string; inviterName?: string }) {
   return (
-    <Shell preview="You're invited to coach on Trajectory">
+    <Shell preview="You're invited to coach on MentorReach">
       <Heading style={h1}>You&rsquo;re invited to coach</Heading>
       <Text style={text}>{props.firstName ? `Hi ${props.firstName},` : 'Hi,'}</Text>
       <Text style={text}>
         {props.inviterName ? `${props.inviterName} invited you` : 'You&rsquo;ve been invited'} to
-        join Trajectory as a coach. Follow the link to create your account and we&rsquo;ll walk you
+        join MentorReach as a coach. Follow the link to create your account and we&rsquo;ll walk you
         through setup — your profile, rates, calendar, and payouts. Your profile goes live
         automatically once it&rsquo;s complete.
       </Text>
@@ -304,11 +304,11 @@ export function CoachInviteEmail(props: { firstName?: string; inviteUrl: string;
 
 export function ApplicationAcceptedEmail(props: { firstName: string; setupUrl: string }) {
   return (
-    <Shell preview="You're in — set up your Trajectory coaching profile">
+    <Shell preview="You're in — set up your MentorReach coaching profile">
       <Heading style={h1}>You&rsquo;re in</Heading>
       <Text style={text}>Hi {props.firstName},</Text>
       <Text style={text}>
-        We&rsquo;d love to have you coach on Trajectory. Create your account and set up your
+        We&rsquo;d love to have you coach on MentorReach. Create your account and set up your
         profile — add a photo, confirm your rates, connect payouts and your calendar — and
         you&rsquo;ll go live automatically. We&rsquo;ve pre-filled what we can from your
         application.

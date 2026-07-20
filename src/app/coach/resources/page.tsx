@@ -27,7 +27,7 @@ export default async function CoachResourcesPage() {
       title: 'Standards & support',
       items: [
         { href: '/coach/handbook', label: 'Coach Handbook', blurb: 'How sessions run, the code of conduct, payments, and cancellations.' },
-        { href: 'mailto:support@trajectorycoaches.com', label: 'Get help', blurb: 'Questions about anything? Email us.', external: true },
+        { href: 'mailto:support@mentorreach.com', label: 'Get help', blurb: 'Questions about anything? Email us.', external: true },
       ],
     },
   ]
@@ -38,7 +38,7 @@ export default async function CoachResourcesPage() {
         <p className="label-mono">Resources</p>
         <h1 className="mt-2 text-3xl sm:text-4xl">Everything you have</h1>
         <p className="mx-auto mt-2 max-w-prose text-slate">
-          The tools, standards, and support that come with coaching on Trajectory.
+          The tools, standards, and support that come with coaching on MentorReach.
         </p>
       </div>
 

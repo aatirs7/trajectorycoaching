@@ -16,7 +16,7 @@ import { cookies } from 'next/headers'
  * non-admin — or a coach who sets it on themselves — is simply ignored. The value is only
  * a user id; there is no write path through this mechanism.
  */
-export const VIEW_AS_COOKIE = 'trajectory_view_as_coach'
+export const VIEW_AS_COOKIE = 'mentorreach_view_as_coach'
 
 const MAX_AGE = 60 * 60 * 2 // 2 hours — a preview session, not a persistent mode
 

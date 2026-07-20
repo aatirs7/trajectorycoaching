@@ -34,10 +34,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Trajectory Coaching',
-    template: '%s · Trajectory Coaching',
+    default: 'MentorReach',
+    template: '%s · MentorReach',
   },
-  description: 'Own your trajectory.',
+  description: "Reach the people who've been there.",
 }
 
 export default function RootLayout({

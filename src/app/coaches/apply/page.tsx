@@ -1,9 +1,9 @@
 import { ApplicationForm } from './application-form'
 
 export const metadata = {
-  title: 'Coach with Trajectory',
+  title: 'Coach with MentorReach',
   description:
-    'Apply to coach on Trajectory. Share your background, availability, and what you can help students with.',
+    'Apply to coach on MentorReach. Share your background, availability, and what you can help students with.',
 }
 
 /**

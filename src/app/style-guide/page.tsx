@@ -28,7 +28,7 @@ export default function StyleGuidePage() {
         <p className="label-mono">Internal</p>
         <h1 className="mt-3 text-4xl">Style guide</h1>
         <p className="mx-auto mt-3 max-w-prose text-slate">
-          Brand tokens and type specimens for Trajectory Coaching. Own your trajectory.
+          Brand tokens and type specimens for MentorReach. Reach the people who&rsquo;ve been there.
         </p>
       </div>
 
@@ -54,7 +54,7 @@ export default function StyleGuidePage() {
         <div className="mt-6 space-y-6">
           <div>
             <p className="label-mono">Fraunces / headings &amp; logo</p>
-            <p className="mt-2 font-display text-3xl">Own your trajectory.</p>
+            <p className="mt-2 font-display text-3xl">Reach the people who&rsquo;ve been there.</p>
           </div>
           <div>
             <p className="label-mono">Inter / body</p>

@@ -57,7 +57,7 @@ export async function reviewApplication(_prev: ReviewState, formData: FormData):
 
     await sendEmail({
       to: app.email,
-      subject: 'You’re in — set up your Trajectory coaching profile',
+      subject: 'You’re in — set up your MentorReach coaching profile',
       react: CoachInviteEmail({
         firstName: firstName(app.fullName),
         inviteUrl: url,
@@ -80,7 +80,7 @@ export async function reviewApplication(_prev: ReviewState, formData: FormData):
     if (notify) {
       await sendEmail({
         to: app.email,
-        subject: 'An update on your Trajectory application',
+        subject: 'An update on your MentorReach application',
         react: CoachRejectedEmail({ coachName: firstName(app.fullName) }),
       })
     }

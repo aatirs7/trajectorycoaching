@@ -55,7 +55,7 @@ export default async function Home() {
             </p>
 
             <h1 className="text-hero mt-6">
-              Own your <span className="italic text-line">trajectory</span>.
+              Reach the people who&rsquo;ve <span className="italic text-line">been there</span>.
             </h1>
 
             <p className="mt-7 max-w-lg text-lg leading-relaxed text-slate">
@@ -70,7 +70,7 @@ export default async function Home() {
               </Button>
               {!user ? (
                 <Button asChild size="lg" variant="outline">
-                  <Link href="/coaches/apply">Coach on Trajectory</Link>
+                  <Link href="/coaches/apply">Coach on MentorReach</Link>
                 </Button>
               ) : null}
             </div>
@@ -103,7 +103,7 @@ export default async function Home() {
              * Host allowlisted in next.config.ts; remove both when real art lands.
              */}
             <Image
-              src="https://picsum.photos/seed/trajectory-hero/1200/900"
+              src="https://picsum.photos/seed/mentorreach-hero/1200/900"
               alt=""
               width={1200}
               height={900}

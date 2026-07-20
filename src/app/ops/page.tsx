@@ -4,7 +4,7 @@ import { seedOpsBoard } from './actions'
 import { db } from '@/db'
 import { tasks } from '@/db/schema'
 
-export const metadata = { title: 'Trajectory Ops' }
+export const metadata = { title: 'MentorReach Ops' }
 export const dynamic = 'force-dynamic'
 
 /**

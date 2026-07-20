@@ -67,7 +67,7 @@ const schema = z.object({
 
   /** Spec §12. Resend. */
   RESEND_API_KEY: optionalKey(),
-  /** e.g. "Trajectory Coaching <hello@trajectorycoaches.com>" */
+  /** e.g. "MentorReach <hello@mentorreach.com>" */
   EMAIL_FROM: optionalKey(),
 
   /** Vercel Blob store token — enables coach headshot uploads. Auto-injected on Vercel

@@ -4,13 +4,13 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-# Trajectory Coaching
+# MentorReach
 
 A Preply-style two-sided coaching marketplace. **The source of truth is
-[`docs/trajectory-platform-spec.md`](docs/trajectory-platform-spec.md)** — read it before
+[`docs/mentorreach-platform-spec.md`](docs/mentorreach-platform-spec.md)** — read it before
 making product decisions. Section references below (§4, §6, …) point into it.
 
-Motto: "Own your trajectory."
+Motto: "Reach the people who've been there."
 
 ## Hard rules (spec §2) — enforce in logic, not just docs
 
@@ -111,7 +111,7 @@ imports it.
 
 ## Unresolved with the client
 
-Spec §14 plus schema-shaped questions are open — see `docs/trajectory-platform-spec.md`
+Spec §14 plus schema-shaped questions are open — see `docs/mentorreach-platform-spec.md`
 §14 and the comments in `src/db/schema/`. The ones that are load-bearing:
 
 - **§14.1 commission binding** — the per-pair reading is an ASSUMPTION. It's quarantined

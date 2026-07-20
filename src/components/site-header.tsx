@@ -44,10 +44,10 @@ export async function SiteHeader() {
   return (
     <header className="border-b border-line/15">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-        <Link href="/" aria-label="Trajectory home" className="flex items-center">
+        <Link href="/" aria-label="MentorReach home" className="flex items-center">
           {/* Transparent PNG logo lockup; sits on the ivory header. next/image resizes the
               1024px source down to the served size. */}
-          <Image src="/logo-full.png" alt="Trajectory" width={56} height={56} priority className="size-14" />
+          <Image src="/logo-full.png" alt="MentorReach" width={56} height={56} priority className="size-14" />
         </Link>
 
         <nav className="flex items-center gap-1">

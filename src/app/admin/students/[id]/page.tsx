@@ -34,7 +34,7 @@ export default async function AdminStudentDetail({ params }: { params: Promise<{
     { q: 'How set on that path', a: PATH_CERTAINTY_LABELS[survey.pathCertainty] ?? String(survey.pathCertainty) },
     { q: 'Prior experience', a: survey.priorExperience },
     { q: 'Wants help with', a: helpWith.length ? helpWith.join(', ') : null },
-    { q: 'How they heard about Trajectory', a: survey.heardFrom },
+    { q: 'How they heard about MentorReach', a: survey.heardFrom },
   ]
 
   return (

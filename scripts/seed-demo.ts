@@ -57,7 +57,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'maya-rao',
     fullName: 'Maya Rao',
-    email: 'maya.rao@demo.trajectorycoaches.com',
+    email: 'maya.rao@demo.mentorreach.com',
     industry: 'Financial Services',
     currentTitle: 'Investment Banking Analyst at Evercore',
     bio: "I went through SA recruiting from a non-target and got there without a network, so I know exactly how opaque this process feels from the outside.\n\nI help with: reading a deal on your resume the way a banker will, the technical set that actually comes up in a first round, and how to network without sounding like a script. I'm blunt about whether your story is landing — that's the useful part.",
@@ -73,7 +73,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'daniel-osei',
     fullName: 'Daniel Osei',
-    email: 'daniel.osei@demo.trajectorycoaches.com',
+    email: 'daniel.osei@demo.mentorreach.com',
     industry: 'Technology',
     currentTitle: 'Senior Software Engineer at Stripe',
     bio: "I've been on both sides of about 200 interview loops now, most recently as an interviewer at Stripe.\n\nWhat I'm actually useful for: figuring out why you're getting rejected after the onsite, system design when you've never designed a system, and deciding between offers. If your fundamentals are fine and something else is going wrong, I can usually find it in one session.",
@@ -89,7 +89,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'jordan-whitfield',
     fullName: 'Jordan Whitfield',
-    email: 'jordan.w@demo.trajectorycoaches.com',
+    email: 'jordan.w@demo.mentorreach.com',
     industry: 'Technology',
     currentTitle: 'Group Product Manager at Figma',
     bio: "I switched into PM from design, so I'm a good person to talk to if you don't have the 'standard' background and are wondering whether that's fatal. It isn't, usually.\n\nI help with breaking into APM programs, PM interview loops, and the thing nobody tells you: how to talk about work you did on a team without either overclaiming or disappearing from your own story.",
@@ -104,7 +104,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'ravi-kapoor',
     fullName: 'Ravi Kapoor',
-    email: 'ravi.kapoor@demo.trajectorycoaches.com',
+    email: 'ravi.kapoor@demo.mentorreach.com',
     industry: 'Engineering',
     currentTitle: 'Mechanical Engineer at SpaceX',
     bio: "I went from a state-school ME degree to SpaceX, and I've screened a lot of new-grad applications since.\n\nI help with the stuff that actually gets an engineering resume past the first filter: framing your projects and internships so they read as real engineering, what hardware interviews actually test, and whether the roles you're chasing match what you've built. I'll tell you if your portfolio is doing the work or just taking up space.",
@@ -119,7 +119,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'zoe-bennett',
     fullName: 'Zoe Bennett',
-    email: 'zoe.bennett@demo.trajectorycoaches.com',
+    email: 'zoe.bennett@demo.mentorreach.com',
     industry: 'Creative & Media',
     currentTitle: 'Senior Art Director at Wieden+Kennedy',
     bio: "I hire and mentor juniors at a big agency, and I broke in without a fancy design school myself.\n\nI help with the parts of a creative career nobody explains: what a book actually needs to land an agency interview, how to talk about your work without either underselling or overclaiming, and whether the reel or portfolio you have is ready or a round away. Blunt, useful feedback, not politeness.",
@@ -134,7 +134,7 @@ const COACHES: DemoCoach[] = [
   {
     slug: 'nadia-haddad',
     fullName: 'Nadia Haddad',
-    email: 'nadia.haddad@demo.trajectorycoaches.com',
+    email: 'nadia.haddad@demo.mentorreach.com',
     industry: 'Cybersecurity',
     currentTitle: 'Senior Security Engineer at CrowdStrike',
     bio: "I came into security through a help desk job and a lot of CTFs, not a CS degree, so I have opinions about which certs are worth your money and which are not.\n\nI help with breaking into blue team or offensive security, what a SOC role is actually like day to day, and building a home lab that gives you something real to talk about. If you're deciding between security and general software, I can give you the honest tradeoff.",

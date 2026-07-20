@@ -56,7 +56,7 @@ const EMPTY: Form = {
   whyInterested: '', priorExperience: '', questions: '', anythingElse: '',
 }
 
-const STORAGE_KEY = 'trajectory_coach_application'
+const STORAGE_KEY = 'mentorreach_coach_application'
 const TOTAL = 8
 
 export function ApplicationForm() {
@@ -184,7 +184,7 @@ export function ApplicationForm() {
           you right now.
         </p>
         <Button asChild size="lg" className="mt-8">
-          <Link href="/">Back to Trajectory</Link>
+          <Link href="/">Back to MentorReach</Link>
         </Button>
       </div>
     )
@@ -204,7 +204,7 @@ export function ApplicationForm() {
             Section {step} of {TOTAL}
           </p>
           <h1 className="mt-4 font-display text-3xl leading-tight lg:text-4xl">
-            Coach with Trajectory
+            Coach with MentorReach
           </h1>
           <p className="mt-4 max-w-sm leading-relaxed text-paper/60">
             This is your application to join. It takes about 5 to 10 minutes. We&rsquo;ll
@@ -229,7 +229,7 @@ export function ApplicationForm() {
           {step === 1 ? (
             <StepShell title="Thanks for your interest">
               <p className="leading-relaxed text-slate">
-                Thanks for your interest in coaching with Trajectory. This takes about 5 to 10
+                Thanks for your interest in coaching with MentorReach. This takes about 5 to 10
                 minutes. We&rsquo;ll follow up once we&rsquo;ve reviewed your application.
               </p>
             </StepShell>
@@ -330,7 +330,7 @@ export function ApplicationForm() {
               <TextField label="Rate per 45-minute session (optional)" value={form.rate45} onChange={(v) => set('rate45', v)} />
               <TextField label="Rate per 60-minute session (optional)" value={form.rate60} onChange={(v) => set('rate60', v)} />
               <RadioField
-                label="Open to Trajectory suggesting a standard rate if your initial number is outside our typical range?"
+                label="Open to MentorReach suggesting a standard rate if your initial number is outside our typical range?"
                 value={form.openToSuggested}
                 onChange={(v) => set('openToSuggested', v)}
                 options={[
@@ -388,7 +388,7 @@ export function ApplicationForm() {
 
           {step === 7 ? (
             <StepShell title="Fit & motivation">
-              <TextAreaField label="Why are you interested in coaching with Trajectory?" value={form.whyInterested} onChange={(v) => set('whyInterested', v)} required />
+              <TextAreaField label="Why are you interested in coaching with MentorReach?" value={form.whyInterested} onChange={(v) => set('whyInterested', v)} required />
               <TextAreaField
                 label="Do you have experience with mentoring, coaching, or tutoring? (Not an issue if you don't.)"
                 value={form.priorExperience}

@@ -59,7 +59,7 @@ export async function submitApplication(raw: unknown): Promise<ApplyState> {
   // Confirmation to the applicant (best-effort).
   await sendEmail({
     to: v.email,
-    subject: 'We got your Trajectory coach application',
+    subject: 'We got your MentorReach coach application',
     react: ApplicationReceivedEmail({ firstName: firstName(v.fullName) }),
   })
 

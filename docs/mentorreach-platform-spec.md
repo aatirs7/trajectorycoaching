@@ -1,4 +1,4 @@
-# Trajectory Coaching — Platform Build Spec
+# MentorReach — Platform Build Spec
 
 **Owner:** Aatir (full tech backend)
 **Purpose:** Buildable, phased spec for a Preply-style two-sided coaching marketplace. Written to be fed to Claude Code / Opus as the source of truth.
@@ -14,7 +14,7 @@
 | ORM | Drizzle |
 | Auth | Clerk (role-based) |
 | Payments | Stripe Connect (Express accounts for coaches) |
-| Booking / scheduling | Calendly (Trajectory-owned Teams org, coaches as hosts) |
+| Booking / scheduling | Calendly (MentorReach-owned Teams org, coaches as hosts) |
 | Email | Resend + React Email |
 | Hosting | Vercel (GitHub-connected auto-deploy) |
 | UI | Tailwind + shadcn/ui |
@@ -34,7 +34,7 @@ Deviates from Isaiah's brief (Supabase + Netlify) on purpose. Same product, my s
 ```
 
 Fonts: **Fraunces** (headings/logo), **Inter** (body), **IBM Plex Mono** (small uppercase labels/tags).
-Motto: **"Own your trajectory."**
+Motto: **"Reach the people who've been there."**
 Feel: warm, editorial, generous whitespace, soft rounded corners, no heavy shadows. Not a SaaS-dashboard look. This is a full rebuild, not a reskin of the current live site.
 
 ---
@@ -125,7 +125,7 @@ subscriptions
 
 ## 5. Coach profile (setup form)
 
-Name, photo, industry/field, current role, bio (what they help with + experience), session lengths offered + rate per length, LinkedIn URL (required for vetting), employer note. Referral code auto-generated. Calendly host link captured (or coach added to the Trajectory Calendly org and their event types created — see §9). Availability lives entirely in Calendly; no custom calendar.
+Name, photo, industry/field, current role, bio (what they help with + experience), session lengths offered + rate per length, LinkedIn URL (required for vetting), employer note. Referral code auto-generated. Calendly host link captured (or coach added to the MentorReach Calendly org and their event types created — see §9). Availability lives entirely in Calendly; no custom calendar.
 
 ---
 
@@ -157,7 +157,7 @@ Required step of student signup. Store in `student_surveys`. Gate browse/book on
 7. How set are you on that path? (choice: locked in ↔ exploring)
 8. Internships / jobs / relevant experience so far? (text, optional)
 9. What do you want help with? (checkboxes, multi): Internships, Full-time recruiting, Choosing a major, Resume review, Interview prep, Networking, Clubs & leadership, Figuring out the right path, College applications, SAT/ACT, Other (+text)
-10. How did you hear about Trajectory? (text, optional)
+10. How did you hear about MentorReach? (text, optional)
 
 ---
 
@@ -180,7 +180,7 @@ Payment before scheduling guarantees no unpaid holds and gives a clean object to
 
 ## 9. Calendly integration
 
-**Account model:** Trajectory owns a Calendly Teams org. Each approved coach is a host with event types matching their offered lengths (30/45/60). This keeps API access and webhooks centralized under one account rather than scattered across coaches' personal Calendlys.
+**Account model:** MentorReach owns a Calendly Teams org. Each approved coach is a host with event types matching their offered lengths (30/45/60). This keeps API access and webhooks centralized under one account rather than scattered across coaches' personal Calendlys.
 
 **Needed capabilities (confirm current plan tier on Calendly's pricing/docs):** API access, webhook subscriptions, single-use scheduling links, UTM/tracking params echoed in webhook payloads.
 
@@ -197,7 +197,7 @@ Payment before scheduling guarantees no unpaid holds and gives a clean object to
 
 ## 10. Stripe Connect flow
 
-Coaches onboard as **Express** connected accounts (link surfaced at/after approval). Trajectory is the platform.
+Coaches onboard as **Express** connected accounts (link surfaced at/after approval). MentorReach is the platform.
 
 **Charge (destination charge, auto-split):**
 - Create a PaymentIntent for the full session price.
@@ -255,6 +255,6 @@ Public reviews/ratings • real-time availability filter in browse • optional 
 
 1. Commission binding interpretation — confirm the per-pair reading in §6.
 2. Late cancel / no-show — coach keeps payout? (§10)
-3. Calendly org model — OK to run one Trajectory Teams account with coaches as hosts, vs. coaches connecting their own? (Affects vetting + API access.)
+3. Calendly org model — OK to run one MentorReach Teams account with coaches as hosts, vs. coaches connecting their own? (Affects vetting + API access.)
 4. Coach Stripe onboarding — self-serve at approval, or admin-assisted for the first cohort?
-5. Domain — keep `trajectorycoaches.com` on the new Vercel deploy (move DNS), or stage on a subdomain first?
+5. Domain — keep `mentorreach.com` on the new Vercel deploy (move DNS), or stage on a subdomain first?

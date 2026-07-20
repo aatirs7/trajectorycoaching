@@ -245,7 +245,7 @@ export function SurveyForm({ existing }: { existing: Existing }) {
 
       {/* Q10 */}
       <Field
-        label="How did you hear about Trajectory?"
+        label="How did you hear about MentorReach?"
         hint="Optional."
         htmlFor="heardFrom"
         errors={err.heardFrom}

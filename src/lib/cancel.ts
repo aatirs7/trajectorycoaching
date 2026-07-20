@@ -124,7 +124,7 @@ async function notifyBothParties(
       payload: { sessionId: session.id, refunded },
       email: {
         to: student.email,
-        subject: 'Your Trajectory session was canceled',
+        subject: 'Your MentorReach session was canceled',
         react: SessionCanceledEmail({
           recipientName: firstName(student.fullName),
           otherPartyName: coach.fullName ?? 'your coach',

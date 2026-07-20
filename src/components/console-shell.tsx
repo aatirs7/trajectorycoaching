@@ -11,7 +11,7 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
       <div className="border-b border-line/15 bg-sand">
         <div className="mx-auto w-full max-w-5xl px-6">
           <div className="flex items-center justify-center gap-2.5 pt-6">
-            <span className="font-display text-lg">Trajectory Console</span>
+            <span className="font-display text-lg">MentorReach Console</span>
             <span className="label-mono">Founders</span>
           </div>
           <div className="mt-4">

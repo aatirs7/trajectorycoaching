@@ -1,6 +1,6 @@
 # Spec coverage — where each requirement lives
 
-Maps `trajectory-platform-spec.md` to the code, so this can be audited rather than taken
+Maps `mentorreach-platform-spec.md` to the code, so this can be audited rather than taken
 on trust. Sections refer to the spec.
 
 ## §2 Hard rules — enforced in logic, not docs

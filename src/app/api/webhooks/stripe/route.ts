@@ -149,7 +149,7 @@ async function handleCheckoutCompleted(checkout: Stripe.Checkout.Session) {
   if (zoomConfigured()) {
     try {
       const meeting = await createMeeting({
-        topic: `Trajectory session — ${coachName}`,
+        topic: `MentorReach session — ${coachName}`,
         startIso: session.scheduledStart.toISOString(),
         durationMin: lengthMinutes,
         timezone: tz,

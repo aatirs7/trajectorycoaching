@@ -73,10 +73,10 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
     <Frame>
       <p className="label-mono">You&rsquo;re invited</p>
       <h1 className="mt-3 text-4xl">
-        {greeting ? `Welcome, ${greeting}` : 'Welcome to Trajectory'}
+        {greeting ? `Welcome, ${greeting}` : 'Welcome to MentorReach'}
       </h1>
       <p className="mx-auto mt-4 max-w-prose text-slate">
-        You&rsquo;ve been invited to coach on Trajectory. We&rsquo;ll set you up with a profile,
+        You&rsquo;ve been invited to coach on MentorReach. We&rsquo;ll set you up with a profile,
         your rates, a calendar, and payouts — about ten minutes, and your profile goes live
         automatically once it&rsquo;s complete.
       </p>

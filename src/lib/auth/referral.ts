@@ -20,7 +20,7 @@ import { coachProfiles } from '@/db/schema'
  * own referral can cut our commission. A short-lived HTTP-only cookie can't be forged
  * into a valid code, because the code is resolved server-side against coach_profiles.
  */
-export const REFERRAL_COOKIE = 'trajectory_ref'
+export const REFERRAL_COOKIE = 'mentorreach_ref'
 
 const THIRTY_DAYS = 60 * 60 * 24 * 30
 

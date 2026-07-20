@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { env, requireEnv } from './env'
 
 /**
- * Spec §10 — Stripe Connect. Trajectory is the platform; coaches are Express
+ * Spec §10 — Stripe Connect. MentorReach is the platform; coaches are Express
  * connected accounts.
  *
  * Lazily constructed on purpose: building the client at module scope would throw at
@@ -19,7 +19,7 @@ export function stripe(): Stripe {
       // Pinned to the version this SDK was built against — silent API drift on a
       // money path is not acceptable. Bump deliberately, alongside the SDK.
       apiVersion: '2026-06-24.dahlia',
-      appInfo: { name: 'Trajectory Coaching' },
+      appInfo: { name: 'MentorReach' },
     })
   }
   return client

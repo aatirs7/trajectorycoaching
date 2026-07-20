@@ -262,7 +262,7 @@ function StepFrame({ title, intro, children }: { title: string; intro: string; c
 function WelcomeStep() {
   return (
     <div className="text-center">
-      <p className="label-mono">Welcome to Trajectory</p>
+      <p className="label-mono">Welcome to MentorReach</p>
       <h1 className="mt-3 text-4xl">Let&rsquo;s get you set up</h1>
       <p className="mx-auto mt-4 max-w-prose text-slate">
         This takes about ten minutes. You&rsquo;ll add your profile and photo, set your rates,

@@ -32,7 +32,7 @@ export async function createInviteAction(_prev: InviteState, formData: FormData)
 
   await sendEmail({
     to: email,
-    subject: 'You’re invited to coach on Trajectory',
+    subject: 'You’re invited to coach on MentorReach',
     react: CoachInviteEmail({
       firstName: fullName ? firstName(fullName) : undefined,
       inviteUrl: url,
@@ -62,7 +62,7 @@ export async function resendInviteAction(formData: FormData): Promise<void> {
 
   await sendEmail({
     to: invite.email,
-    subject: 'You’re invited to coach on Trajectory',
+    subject: 'You’re invited to coach on MentorReach',
     react: CoachInviteEmail({
       firstName: invite.fullName ? firstName(invite.fullName) : undefined,
       inviteUrl: inviteUrl(invite.token),

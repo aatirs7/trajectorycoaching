@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 export const metadata = {
   title: 'Coach Handbook',
   description:
-    'How we expect coaches to operate on Trajectory. Completing onboarding means you agree to these standards.',
+    'How we expect coaches to operate on MentorReach. Completing onboarding means you agree to these standards.',
 }
 
 /**
@@ -23,7 +23,7 @@ export default function CoachHandbookPage() {
           <p className="label-mono">For coaches</p>
           <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">Coach Handbook</h1>
           <p className="mx-auto mt-4 max-w-prose leading-relaxed text-slate">
-            How we expect coaches to operate on Trajectory. Completing onboarding means you agree
+            How we expect coaches to operate on MentorReach. Completing onboarding means you agree
             to these standards. Read it once. It&rsquo;s short on purpose.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -49,7 +49,7 @@ export default function CoachHandbookPage() {
         {/* What we are */}
         <Section id="what-we-are" eyebrow="Start here" title="What we are">
           <P>
-            Trajectory connects students with people who already have the job or seat they are
+            MentorReach connects students with people who already have the job or seat they are
             aiming for. Students come here for honest, specific, useful conversations. Not
             motivation, not fluff, not a sales pitch. Your value is that you did the thing they are
             trying to do, and you will tell them the truth about it.
@@ -106,7 +106,7 @@ export default function CoachHandbookPage() {
             items={[
               'You set your own rates and the session lengths you offer.',
               'Payment runs through Stripe. After each completed session, your earnings are paid out to your connected account automatically, so you never chase an invoice.',
-              'Trajectory takes a platform commission on each session. The rest is yours.',
+              'MentorReach takes a platform commission on each session. The rest is yours.',
               'You are an independent contractor, not an employee. You handle your own taxes on what you earn, and Stripe provides your tax documentation directly.',
             ]}
           />
@@ -205,7 +205,7 @@ const LIFECYCLE: Array<{ title: string; items: string[] }> = [
 const CONDUCT: Array<{ title: string; body: string }> = [
   {
     title: 'Everything stays on-platform',
-    body: 'All scheduling and all payment happen through Trajectory. Never arrange sessions or take payment off-platform, at any commission tier. Being asked to, or asking a student to, is a serious violation.',
+    body: 'All scheduling and all payment happen through MentorReach. Never arrange sessions or take payment off-platform, at any commission tier. Being asked to, or asking a student to, is a serious violation.',
   },
   {
     title: 'Be who you say you are',
