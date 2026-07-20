@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { CoachCard } from '@/components/coach-card'
 import { Button } from '@/components/ui/button'
@@ -10,9 +9,10 @@ import { TRUST_BLOCK_BODY, TRUST_BLOCK_TITLE } from '@/lib/policy-copy'
  * Spec §1 — the homepage. Warm, editorial, generous whitespace, no heavy shadows.
  *
  * SECTION RHYTHM. Tones alternate the whole way down so the page has a pulse as you
- * scroll, rather than reading as one flat ivory template:
+ * scroll, rather than reading as one flat template:
  *
- *   hero          sand        (a step down from paper)
+ *   hero          paper       centered type, no art
+ *   how it works  INK         full-bleed
  *   coaches       paper       + raised cards
  *   coach CTA     INK         full-bleed, the anchor contrast moment
  *   trust         sand-deep
@@ -24,6 +24,11 @@ import { TRUST_BLOCK_BODY, TRUST_BLOCK_TITLE } from '@/lib/policy-copy'
  * both keeps the alternation honest and closes the page on a reassurance.
  *
  * Depth comes from those blocks, not shadows (§1).
+ *
+ * WHY THE HERO IS CENTERED TYPE AND NOT TEXT-LEFT/CARD-RIGHT: the old split hero, over
+ * a warm ground, under a serif headline with one accent-colored phrase, was the same
+ * composition as the rest of this category. The differentiation is the whole point —
+ * see the note at the top of globals.css before restoring a two-column hero.
  */
 export default async function Home() {
   const user = await getDbUser()
@@ -37,108 +42,83 @@ export default async function Home() {
   const ctaHref = user ? (user.role === 'coach' ? '/coach' : '/coaches') : '/coaches'
 
   return (
-    <main className="flex-1">
+    <main className="editorial flex-1">
       {/* ---------------------------------------------------------------- HERO */}
-      <section className="relative overflow-hidden border-b border-line/15 bg-sand">
-        {/* Warm gold wash: a soft light source, not a shadow. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full opacity-20 blur-3xl"
-          style={{ background: 'radial-gradient(circle, var(--gold), transparent 70%)' }}
-        />
+      <section className="border-b border-line/10">
+        <div className="mx-auto w-full max-w-4xl px-6 pt-28 pb-24 text-center">
+          <p className="eyebrow">Career coaching, honestly</p>
 
-        <div className="relative mx-auto grid w-full max-w-5xl gap-14 px-6 pt-24 pb-24 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-          <div>
-            <p className="label-mono flex items-center gap-2">
-              <span className="inline-block h-px w-8 bg-gold" />
-              Career coaching, honestly
-            </p>
+          {/*
+           * One color, no accent phrase. The emphasis comes from scale and tracking
+           * instead — a colored word inside a display headline is the device this whole
+           * category leans on, so it is deliberately absent.
+           */}
+          <h1 className="text-hero mx-auto mt-6 max-w-3xl text-balance">
+            Reach the people who&rsquo;ve been there.
+          </h1>
 
-            <h1 className="text-hero mt-6">
-              Reach the people who&rsquo;ve <span className="italic text-line">been there</span>.
-            </h1>
+          <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-slate">
+            Book time with people who already have the job you want. No mentorship theater
+            and no generic advice. Just a real conversation with someone who did the thing
+            you&rsquo;re trying to do.
+          </p>
 
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-slate">
-              Book time with people who already have the job you want. No mentorship theater
-              and no generic advice. Just a real conversation with someone who did the thing
-              you&rsquo;re trying to do.
-            </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link href={ctaHref}>{user ? 'Go to your dashboard' : 'Find a coach'}</Link>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg">
+              <Link href={ctaHref}>{user ? 'Go to your dashboard' : 'Find a coach'}</Link>
+            </Button>
+            {!user ? (
+              <Button asChild size="lg" variant="outline">
+                <Link href="/coaches/apply">Coach on MentorReach</Link>
               </Button>
-              {!user ? (
-                <Button asChild size="lg" variant="outline">
-                  <Link href="/coaches/apply">Coach on MentorReach</Link>
-                </Button>
-              ) : null}
-            </div>
-
-            {industries.length > 0 ? (
-              <div className="mt-10 border-t border-line/15 pt-6">
-                <p className="label-mono">Coaching across</p>
-                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
-                  {industries.slice(0, 7).map((i) => (
-                    <span key={i} className="text-sm text-slate">
-                      {i}
-                    </span>
-                  ))}
-                </div>
-              </div>
             ) : null}
           </div>
 
-          {/*
-           * The ink panel sits BESIDE the headline: it's the main contrast block and the
-           * reason the hero doesn't read as bare text on a flat field. The image is part
-           * of the same card rather than a separate element, so the hero stays one
-           * composition.
-           */}
-          <aside className="overflow-hidden rounded-2xl bg-ink text-paper">
-            {/*
-             * ⚠️ PLACEHOLDER ART — swap for real brand photography.
-             * Deliberately abstract/editorial, NOT a face: a generated face here would
-             * imply a person who doesn't exist, on a page promising real people.
-             * Host allowlisted in next.config.ts; remove both when real art lands.
-             */}
-            <Image
-              src="https://picsum.photos/seed/mentorreach-hero/1200/900"
-              alt=""
-              width={1200}
-              height={900}
-              priority
-              aria-hidden
-              className="h-44 w-full object-cover opacity-80"
-            />
-
-            <div className="p-8">
-              <p className="font-mono text-xs tracking-widest text-gold uppercase">How it works</p>
-              <ol className="mt-6 space-y-6">
-                {[
-                  { n: '01', t: 'Tell us where you’re headed', d: 'A short survey covering your year, your field, and what you need.' },
-                  { n: '02', t: 'Pick someone who’s been there', d: 'Pick someone who’s actually done the thing you’re aiming for.' },
-                  { n: '03', t: 'Book, pay, and talk', d: 'Pay securely, pick a time. Free cancellation up to 24 hours before.' },
-                ].map((s) => (
-                  <li key={s.n} className="flex gap-4">
-                    <span className="font-mono text-xs text-gold">{s.n}</span>
-                    <div>
-                      <p className="font-display text-lg leading-snug text-paper">{s.t}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-paper/60">{s.d}</p>
-                    </div>
-                  </li>
+          {industries.length > 0 ? (
+            <div className="mt-14">
+              <p className="eyebrow">Coaching across</p>
+              <div className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-1.5">
+                {industries.slice(0, 7).map((i) => (
+                  <span key={i} className="text-sm text-slate">
+                    {i}
+                  </span>
                 ))}
-              </ol>
+              </div>
             </div>
-          </aside>
+          ) : null}
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------- HOW IT WORKS */}
+      {/*
+       * Pulled out of the old hero card into its own full-bleed ink band. It carries the
+       * contrast the hero used to get from the side panel, without the split composition
+       * — and without the placeholder stock photo that used to sit above it.
+       */}
+      <section className="bg-ink text-paper">
+        <div className="mx-auto w-full max-w-5xl px-6 py-20">
+          <p className="eyebrow text-center text-paper/50">How it works</p>
+          <ol className="mt-12 grid gap-10 sm:grid-cols-3">
+            {[
+              { n: '01', t: 'Tell us where you’re headed', d: 'A short survey covering your year, your field, and what you need.' },
+              { n: '02', t: 'Pick someone who’s been there', d: 'Pick someone who’s actually done the thing you’re aiming for.' },
+              { n: '03', t: 'Book, pay, and talk', d: 'Pay securely, pick a time. Free cancellation up to 24 hours before.' },
+            ].map((s) => (
+              <li key={s.n} className="border-t border-paper/15 pt-5">
+                <span className="font-mono text-xs text-gold">{s.n}</span>
+                <h3 className="mt-3 text-xl leading-snug text-paper">{s.t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-paper/60">{s.d}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
       {/* ----------------------------------------------------------- COACHES */}
       {featured.length > 0 ? (
         <section className="mx-auto w-full max-w-5xl px-6 py-24 text-center">
-          <p className="label-mono">Our coaches</p>
-          <h2 className="text-section mt-2">People who&rsquo;ve done it</h2>
+          <p className="eyebrow">Our coaches</p>
+          <h2 className="text-section mt-3">People who&rsquo;ve done it</h2>
           <p className="mx-auto mt-4 max-w-md text-slate">
             Hand-picked. We personally review every coach before they join.
           </p>
@@ -149,7 +129,7 @@ export default async function Home() {
            */}
           {employers.length > 0 ? (
             <div className="mt-9 border-y border-line/15 py-5">
-              <p className="label-mono">Coaches from</p>
+              <p className="eyebrow">Coaches from</p>
               <div className="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2">
                 {employers.map((e) => (
                   <span key={e} className="font-display text-base text-ink/70">
@@ -183,7 +163,7 @@ export default async function Home() {
           style={{ background: 'radial-gradient(circle, var(--gold), transparent 70%)' }}
         />
         <div className="relative mx-auto w-full max-w-3xl px-6 py-28 text-center">
-          <p className="font-mono text-xs tracking-widest text-gold uppercase">For coaches</p>
+          <p className="eyebrow text-paper/50">For coaches</p>
           <h2 className="text-section mt-4 text-paper">Know something worth sharing?</h2>
           <p className="mx-auto mt-5 max-w-md text-lg leading-relaxed text-paper/70">
             Set your own rates and hours. Get paid per session. We review every coach before

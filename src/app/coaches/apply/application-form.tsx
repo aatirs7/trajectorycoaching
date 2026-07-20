@@ -200,12 +200,10 @@ export function ApplicationForm() {
           style={{ background: 'radial-gradient(circle, var(--gold), transparent 70%)' }}
         />
         <div className="relative lg:sticky lg:top-16">
-          <p className="font-mono text-xs tracking-widest text-gold uppercase">
+          <p className="eyebrow text-paper/50">
             Section {step} of {TOTAL}
           </p>
-          <h1 className="mt-4 font-display text-3xl leading-tight lg:text-4xl">
-            Coach with MentorReach
-          </h1>
+          <h1 className="mt-4 text-3xl leading-tight lg:text-4xl">Coach with MentorReach</h1>
           <p className="mt-4 max-w-sm leading-relaxed text-paper/60">
             This is your application to join. It takes about 5 to 10 minutes. We&rsquo;ll
             follow up once we&rsquo;ve reviewed it.

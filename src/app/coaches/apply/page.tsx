@@ -12,7 +12,7 @@ export const metadata = {
  */
 export default function ApplyPage() {
   return (
-    <main className="flex-1">
+    <main className="editorial flex-1">
       <ApplicationForm />
     </main>
   )

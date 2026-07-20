@@ -45,9 +45,9 @@ export default async function CoachesPage({
   ])
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-14">
+    <main className="editorial mx-auto w-full max-w-5xl flex-1 px-6 py-14">
       <div className="text-center">
-        <p className="label-mono">Coaches</p>
+        <p className="eyebrow">Coaches</p>
         <h1 className="mt-3 text-4xl">Find someone who&rsquo;s done it</h1>
         <p className="mx-auto mt-3 max-w-prose text-slate">
           Every coach here is hand-picked and personally reviewed before they join.

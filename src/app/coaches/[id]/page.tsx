@@ -48,7 +48,7 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-14">
+    <main className="editorial mx-auto w-full max-w-5xl flex-1 px-6 py-14">
       <div className="grid gap-12 lg:grid-cols-[1fr_360px]">
         <div>
           <div className="flex items-start gap-5">

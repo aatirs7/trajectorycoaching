@@ -1,6 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
-import { Fraunces, IBM_Plex_Mono, Inter } from 'next/font/google'
+import { Archivo, Fraunces, IBM_Plex_Mono, Inter } from 'next/font/google'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import './globals.css'
@@ -16,6 +16,21 @@ import './globals.css'
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
+  display: 'swap',
+})
+
+/**
+ * The marketing display face. A grotesque, deliberately NOT a serif: an ivory ground
+ * under a heavy serif headline is the house style of half this category (see
+ * mentorandi.com), and we kept colliding with it. Archivo carries a large headline
+ * at tight tracking without reading as generic Inter-everywhere.
+ *
+ * Scoped to `.editorial` in globals.css, so the coach/admin consoles keep Fraunces
+ * headings until the new look is signed off.
+ */
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--font-archivo',
   display: 'swap',
 })
 
@@ -48,7 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${archivo.variable} ${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         {/*
