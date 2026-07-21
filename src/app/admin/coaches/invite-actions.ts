@@ -30,7 +30,7 @@ export async function createInviteAction(_prev: InviteState, formData: FormData)
     invitedBy: admin.id,
   })
 
-  await sendEmail({
+  const delivery = await sendEmail({
     to: email,
     subject: 'You’re invited to coach on MentorReach',
     react: CoachInviteEmail({
@@ -41,7 +41,28 @@ export async function createInviteAction(_prev: InviteState, formData: FormData)
   })
 
   revalidatePath('/admin/coaches')
-  return { success: `Invite sent to ${email}.`, url }
+
+  /**
+   * Report what actually happened. sendEmail() is best-effort by design and never
+   * throws, so claiming "Invite sent" unconditionally is a lie whenever Resend is
+   * unconfigured or the send failed — and it's a costly one here, because the admin
+   * would stop chasing an invite that never left the building.
+   *
+   * The invite itself is valid either way: createCoachInvite() has already written the
+   * row, and the panel renders the copyable link below this message. So the failure
+   * path is genuinely recoverable, which is exactly why it has to be visible.
+   */
+  if (delivery.sent) return { success: `Invite sent to ${email}.`, url }
+
+  const why =
+    delivery.reason === 'not_configured'
+      ? 'email isn’t switched on yet'
+      : 'the email failed to send'
+
+  return {
+    success: `Invite created for ${email}, but ${why}. Copy the link below and send it yourself.`,
+    url,
+  }
 }
 
 export async function revokeInviteAction(formData: FormData): Promise<void> {
