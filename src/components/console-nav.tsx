@@ -19,7 +19,9 @@ const ITEMS = [
   { href: '/ops', label: 'Ops board', exact: true },
   { href: '/ops/overview', label: 'Task overview' },
   { href: '/ops/expenses', label: 'Expenses' },
-  { href: '/ops/llc', label: 'LLC setup' },
+  // LLC setup is hidden from the nav for now but still reachable at /ops/llc — the page
+  // and its gate are untouched, so re-adding the tab is a one-line change here.
+  // { href: '/ops/llc', label: 'LLC setup' },
 ]
 
 export function ConsoleNav() {
