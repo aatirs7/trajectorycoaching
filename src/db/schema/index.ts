@@ -22,6 +22,7 @@ export * from './applications'
 export * from './invites'
 export * from './availability'
 export * from './legal'
+export * from './expenses'
 
 /*
  * DEFERRED — spec §4 "Phase 1.5":

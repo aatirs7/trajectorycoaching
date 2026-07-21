@@ -129,6 +129,15 @@ Book button is disabled with an honest reason rather than failing at checkout.
 - `/ops` — shared founder task board, two-level hierarchy (workstream → sub-task)
 - `/ops/overview` — per-founder dashboard: progress, completion timeline, open work.
   Click a founder to filter (`?who=Aatir`)
+- `/ops/expenses` — business expense ledger. DB-backed (`expenses` table), founders-only.
+  Log a spend (date, description, vendor, amount, category, who paid, receipt link, notes);
+  summaries by month and by category; "owed back" tile totals unreimbursed personal spend
+  per founder; CSV export of the current filter. Refunds/credits are negative amounts and
+  net out on their own. All arithmetic is pure in `src/lib/expenses.ts` and unit-tested
+  (`expenses.test.ts`, 29 cases) — money is integer cents, dates are stored as `date`
+  strings (no timezone), and "this month" is computed in `America/New_York` (`BUSINESS_TZ`),
+  not the viewer's zone. No relation to `sessions`/Stripe — that is revenue; this is spend.
+- `/ops/llc` — Virginia LLC formation wizard (static, localStorage progress)
 - `/admin/*` — mentors, students, accounts, reports, integrations
 - Admin "view as mentor" — read-only preview via an httpOnly cookie, honored only for admins
 

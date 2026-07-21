@@ -18,6 +18,7 @@ const ITEMS = [
   { href: '/admin/integrations', label: 'Integrations' },
   { href: '/ops', label: 'Ops board', exact: true },
   { href: '/ops/overview', label: 'Task overview' },
+  { href: '/ops/expenses', label: 'Expenses' },
   { href: '/ops/llc', label: 'LLC setup' },
 ]
 
