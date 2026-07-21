@@ -123,6 +123,39 @@ function load(): Env {
     )
   }
 
+  /**
+   * A production Clerk key in a local environment is a silent trap, so make it loud.
+   *
+   * A pk_live_ encodes the domain it is bound to — ours decodes to
+   * "clerk.mentorreach.com" — and the production instance refuses any other origin. Point
+   * localhost at it and sign-in simply stops working, with no error that names the cause.
+   *
+   * What makes it costly is the .env precedence rule: a duplicate key LATER in the file
+   * wins, so a live pair pasted at the bottom silently overrides the pk_test_ pair at the
+   * top. The file looks correct at a glance. This has cost real debugging time here more
+   * than once, which is why it's a hard failure rather than a warning.
+   *
+   * Development only. VERCEL_ENV is 'production' on a production deploy, where a live key
+   * is exactly right, and 'preview' on preview deploys, where the guard would be wrong to
+   * fire on a build that legitimately carries whatever the project has configured.
+   */
+  if (process.env.NODE_ENV === 'development' && !process.env.VERCEL_ENV) {
+    const live = (['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', 'CLERK_SECRET_KEY'] as const).filter((k) =>
+      /^(pk|sk)_live_/.test(process.env[k] ?? ''),
+    )
+
+    if (live.length) {
+      throw new Error(
+        `Production Clerk keys found in local development: ${live.join(', ')}.\n\n` +
+          `A pk_live_ is locked to clerk.mentorreach.com and will reject http://localhost,\n` +
+          `so sign-in breaks with no useful error. Remember that a duplicate key later in\n` +
+          `.env.local overrides the pk_test_ pair above it.\n\n` +
+          `Fix: delete the pk_live_/sk_live_ lines from .env.local. Production reads its\n` +
+          `own copy from Vercel and is unaffected.`,
+      )
+    }
+  }
+
   cached = parsed.data
   return cached
 }

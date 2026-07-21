@@ -132,15 +132,26 @@ export async function browseCoaches(filters: BrowseFilters = {}): Promise<CoachC
 }
 
 /**
- * Just the ids and change dates of publicly visible coaches, for src/app/sitemap.ts.
+ * Just the ids and change dates of coaches that may be INDEXED, for src/app/sitemap.ts.
  *
  * Deliberately NOT browseCoaches(): that fans out to users + offerings and collapses one
  * row per offering in JS to build a rendered card. A sitemap needs two columns, and
  * running the heavier query would put profile bios and prices on a path that only ever
  * emits URLs.
  *
- * It reuses liveCoachSql() and the same active-offering join, so the sitemap can't list a
- * coach whose page would 404 — the one failure mode that actively costs you crawl budget.
+ * SEED COACHES ARE EXCLUDED, and this is the important part.
+ *
+ * liveCoachSql() deliberately treats a seed profile as live so the marketplace has
+ * something to demo. "Visible on the site" and "safe to hand to a search engine" are not
+ * the same question, though. Seed profiles are invented people carrying real employer
+ * names, and the profile page attaches Person + Offer structured data — a machine-readable
+ * assertion that Maya Rao is an analyst at Evercore. Indexed, those URLs outlive the rows:
+ * delete the seed data and they become 404s, and until Google recrawls, fabricated people
+ * stay associated with the brand.
+ *
+ * So the sitemap ships real coaches only. It is empty of coaches today (there are none
+ * yet) and fills in on its own as each one publishes, which is what a dynamic sitemap is
+ * for. The matching noindex lives in the profile page's generateMetadata.
  */
 export async function sitemapCoaches(): Promise<Array<{ userId: string; updatedAt: Date }>> {
   const rows = await db
@@ -150,7 +161,7 @@ export async function sitemapCoaches(): Promise<Array<{ userId: string; updatedA
       coachOfferings,
       and(eq(coachOfferings.coachId, coachProfiles.userId), eq(coachOfferings.isActive, true)),
     )
-    .where(liveCoachSql())
+    .where(and(liveCoachSql(), eq(coachProfiles.isSeed, false)))
 
   return rows
 }

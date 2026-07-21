@@ -38,6 +38,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       url: path,
     },
     twitter: { card: 'summary_large_image' as const, title: name, description },
+    /**
+     * A seed profile is an invented person wearing a real employer's name. It stays
+     * browsable so the marketplace can be demoed, but it must never be indexed.
+     *
+     * Excluding these from the sitemap is not sufficient on its own: a sitemap is a
+     * suggestion, and every one of these pages is reachable by a normal link from
+     * /coaches. Without this, the first crawl of the browse page finds all of them.
+     */
+    ...(data.profile.isSeed ? NO_INDEX : {}),
   }
 }
 
@@ -90,7 +99,14 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
        *
        * One Offer per active offering rather than a single "from" price, because each
        * session length genuinely is a separate purchasable thing.
+       *
+       * NOTHING is emitted for a seed profile. The page is noindexed already, but this
+       * markup is a different kind of claim: `Person` with a `worksFor` is an explicit,
+       * machine-readable statement that a named individual holds a job at a named company.
+       * Publishing that about someone who does not exist is worse than a placeholder card,
+       * and it costs nothing to withhold.
        */}
+      {profile.isSeed ? null : (
       <JsonLd
         data={[
           {
@@ -136,6 +152,7 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
           },
         ]}
       />
+      )}
 
       <div className="grid gap-12 lg:grid-cols-[1fr_360px]">
         <div>
