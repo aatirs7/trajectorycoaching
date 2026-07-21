@@ -6,7 +6,7 @@ import { db } from '@/db'
 import { tasks } from '@/db/schema'
 import { requireAdmin } from '@/lib/auth/guards'
 import { OPS_SEED } from '@/lib/ops-seed'
-import { isCategory, isOwner, isStatus, OPS_CATEGORIES } from '@/lib/ops-schema'
+import { isCategory, isOwner, isStatus, OPS_CATEGORIES, OPS_OWNERS } from '@/lib/ops-schema'
 
 /**
  * Founders-only. The /ops layout gates the pages, but a Server Action is a POST that can
@@ -94,21 +94,44 @@ export async function updateTask(formData: FormData): Promise<OpsState> {
 }
 
 export async function setTaskStatus(formData: FormData): Promise<OpsState> {
-  await requireAdmin()
+  const admin = await requireAdmin()
   const id = String(formData.get('id') ?? '')
   const status = formData.get('status')
 
   if (!id) return { error: 'Missing task.' }
   if (!isStatus(status)) return { error: 'Unknown status.' }
 
+  const done = status === 'done'
+
   await db
     .update(tasks)
-    // completed_at tracks the done state both ways, per the spec.
-    .set({ status, completedAt: status === 'done' ? new Date() : null })
+    /**
+     * completed_at and completed_by move together, in both directions. Clearing them on
+     * un-done matters: a task reopened and finished again should read as completed by
+     * whoever finished it the second time, not carry a stale first attempt.
+     *
+     * completed_by is the signed-in founder, matched to an OPS_OWNERS name so the
+     * overview can group by it. It falls back to the raw name rather than dropping the
+     * attribution, which is the more useful failure.
+     */
+    .set({
+      status,
+      completedAt: done ? new Date() : null,
+      completedBy: done ? ownerNameFor(admin.fullName) : null,
+    })
     .where(eq(tasks.id, id))
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
+}
+
+/** "Aatir Siddiqui" → "Aatir", so completions group under the same names as ownership. */
+function ownerNameFor(fullName: string | null): string | null {
+  if (!fullName) return null
+  const first = fullName.trim().split(/\s+/)[0] ?? ''
+  const match = OPS_OWNERS.find((o) => o.toLowerCase() === first.toLowerCase())
+  return match ?? fullName.trim()
 }
 
 export async function toggleThisWeek(formData: FormData): Promise<OpsState> {

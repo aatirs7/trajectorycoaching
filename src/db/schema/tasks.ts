@@ -28,6 +28,18 @@ export const tasks = pgTable(
       .$onUpdate(() => new Date()),
     /** Set when status → done, cleared otherwise. */
     completedAt: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
+    /**
+     * Who actually ticked it off, captured from the signed-in founder — NOT the same
+     * question as `owner`, which is whose job it is.
+     *
+     * They diverge in the two cases the overview has to get right: a task owned by
+     * "Both" has no attribution at all without this, and either founder can close the
+     * other's task. Crediting completion to `owner` would then quietly assign work to
+     * someone who didn't do it, which defeats the point of the dashboard.
+     *
+     * Nullable, and null for everything completed before this column existed.
+     */
+    completedBy: text('completed_by'),
   },
   (t) => [index('tasks_category_sort_idx').on(t.category, t.sortOrder)],
 )

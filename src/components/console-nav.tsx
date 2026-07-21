@@ -16,6 +16,7 @@ const ITEMS = [
   { href: '/admin/users', label: 'Accounts' },
   { href: '/admin/integrations', label: 'Integrations' },
   { href: '/ops', label: 'Ops board', exact: true },
+  { href: '/ops/overview', label: 'Task overview' },
 ]
 
 export function ConsoleNav() {
