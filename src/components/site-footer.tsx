@@ -36,6 +36,28 @@ export function SiteFooter() {
               Your coaching
             </Link>
           </div>
+          {/*
+           * Legal has to be reachable from every page without an account — a prospective
+           * mentor reads the Agreement before deciding to sign up, not after.
+           */}
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] tracking-widest text-gold uppercase">Legal</p>
+            <Link href="/legal/terms" className="block text-paper/70 hover:text-paper">
+              Terms of Service
+            </Link>
+            <Link href="/legal/privacy" className="block text-paper/70 hover:text-paper">
+              Privacy Policy
+            </Link>
+            <Link href="/legal/refunds" className="block text-paper/70 hover:text-paper">
+              Cancellation &amp; refunds
+            </Link>
+            <Link href="/legal/mentor-agreement" className="block text-paper/70 hover:text-paper">
+              Mentor Agreement
+            </Link>
+            <Link href="/legal/mentor-handbook" className="block text-paper/70 hover:text-paper">
+              Mentor Handbook
+            </Link>
+          </div>
         </nav>
       </div>
 

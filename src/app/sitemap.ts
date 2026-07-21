@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { sitemapCoaches } from '@/lib/browse'
+import { allDocuments } from '@/lib/legal'
 import { absoluteUrl } from '@/lib/seo'
 
 /**
@@ -31,6 +32,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl('/'), changeFrequency: 'weekly', priority: 1 },
     { url: absoluteUrl('/coaches'), changeFrequency: 'daily', priority: 0.9 },
     { url: absoluteUrl('/coaches/apply'), changeFrequency: 'monthly', priority: 0.7 },
+    /**
+     * The legal pages are indexable on purpose. They are low priority for ranking, but a
+     * marketplace whose terms and privacy policy cannot be found is a trust signal in the
+     * wrong direction — and app stores, payment processors and partners all check.
+     * `lastModified` is the document's own effective date, so a version bump is a real
+     * change signal rather than a timestamp that moves on every deploy.
+     */
+    ...allDocuments().map((doc) => ({
+      url: absoluteUrl(`/legal/${doc.slug}`),
+      lastModified: new Date(`${doc.effectiveDate}T00:00:00Z`),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    })),
   ]
 
   let coachRoutes: MetadataRoute.Sitemap = []
