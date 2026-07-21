@@ -159,6 +159,7 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
                     key={t.id}
                     task={t}
                     subtasks={childrenOf.get(t.id) ?? []}
+                    parentOptions={parents}
                     isFirst={i === 0}
                     isLast={i === shown.length - 1}
                     run={run}
@@ -173,7 +174,12 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
                 </p>
               ) : null}
 
-              <AddTask category={category} run={run} pending={pending} />
+              <AddTask
+                category={category}
+                parents={parents}
+                run={run}
+                pending={pending}
+              />
             </section>
           )
         })}
@@ -186,6 +192,7 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
 function TaskRow({
   task,
   subtasks = [],
+  parentOptions = [],
   isFirst,
   isLast,
   run,
@@ -194,6 +201,7 @@ function TaskRow({
 }: {
   task: OpsTaskView
   subtasks?: OpsTaskView[]
+  parentOptions?: OpsTaskView[]
   isFirst: boolean
   isLast: boolean
   run: (fn: (fd: FormData) => Promise<unknown>, fd: FormData) => void
@@ -232,7 +240,7 @@ function TaskRow({
             placeholder="Details (optional)"
             aria-label="Details"
           />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <select
               name="owner"
               defaultValue={task.owner}
@@ -245,6 +253,31 @@ function TaskRow({
                 </option>
               ))}
             </select>
+
+            {/*
+             * Re-file after the fact. Grouping usually happens this way round: you write
+             * the task, then notice which workstream it belongs to. A task that already
+             * has sub-tasks is excluded server-side, since nesting it would create a
+             * third level the board doesn't render.
+             */}
+            {subtasks.length === 0 ? (
+              <select
+                name="parentId"
+                defaultValue={task.parentId ?? 'none'}
+                aria-label="Workstream"
+                className="max-w-[15rem] rounded-md border border-line/25 bg-raised px-2 py-1.5 text-sm"
+              >
+                <option value="none">Its own workstream</option>
+                {parentOptions
+                  .filter((p) => p.id !== task.id)
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      Inside: {p.title}
+                    </option>
+                  ))}
+              </select>
+            ) : null}
+
             <Button type="submit" size="sm" disabled={pending}>
               Save
             </Button>
@@ -366,20 +399,35 @@ function TaskRow({
           </div>
 
           {/* Children live inside the parent row, one level only. */}
-          {expanded && subtasks.length > 0 ? (
-            <ul className="mt-1 space-y-0 border-l border-line/20 pl-4">
-              {subtasks.map((c, i) => (
-                <TaskRow
-                  key={c.id}
-                  task={c}
-                  isFirst={i === 0}
-                  isLast={i === subtasks.length - 1}
-                  run={run}
-                  pending={pending}
-                  nested
-                />
-              ))}
-            </ul>
+          {expanded && !nested ? (
+            <div className="mt-1 border-l border-line/20 pl-4">
+              {subtasks.length > 0 ? (
+                <ul className="space-y-0">
+                  {subtasks.map((c, i) => (
+                    <TaskRow
+                      key={c.id}
+                      task={c}
+                      // Children get the same list, so one can be promoted out or moved
+                      // into a different workstream from its own edit form.
+                      parentOptions={parentOptions}
+                      isFirst={i === 0}
+                      isLast={i === subtasks.length - 1}
+                      run={run}
+                      pending={pending}
+                      nested
+                    />
+                  ))}
+                </ul>
+              ) : null}
+
+              <AddTask
+                category={task.category}
+                fixedParent={task}
+                run={run}
+                pending={pending}
+                label="+ Add sub-task"
+              />
+            </div>
           ) : null}
         </div>
       </div>
@@ -387,14 +435,27 @@ function TaskRow({
   )
 }
 
+/**
+ * Add a task, optionally inside a workstream.
+ *
+ * `fixedParent` is set when the form is opened from within a parent row ("+ Add sub-task"),
+ * where the destination is already implied and re-asking would be noise. Opened from the
+ * bottom of a category it offers the choice instead, defaulting to a new top-level task.
+ */
 function AddTask({
   category,
+  parents,
+  fixedParent,
   run,
   pending,
+  label = '+ Add a task',
 }: {
-  category: OpsCategory
+  category: OpsCategory | string
+  parents?: OpsTaskView[]
+  fixedParent?: OpsTaskView
   run: (fn: (fd: FormData) => Promise<unknown>, fd: FormData) => void
   pending: boolean
+  label?: string
 }) {
   const [open, setOpen] = useState(false)
 
@@ -403,9 +464,11 @@ function AddTask({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-3 text-sm text-slate underline decoration-gold underline-offset-4 hover:text-ink"
+        className={`text-sm text-slate underline decoration-gold underline-offset-4 hover:text-ink ${
+          fixedParent ? 'mt-2 ml-1 text-xs' : 'mt-3'
+        }`}
       >
-        + Add a task
+        {label}
       </button>
     )
   }
@@ -416,15 +479,30 @@ function AddTask({
         run(createTask, f)
         setOpen(false)
       }}
-      className="mt-3 space-y-2 rounded-lg border border-line/25 bg-raised p-3"
+      className={`space-y-2 rounded-lg border border-line/25 bg-raised p-3 ${
+        fixedParent ? 'mt-2' : 'mt-3'
+      }`}
     >
       <input type="hidden" name="category" value={category} />
-      <Input name="title" placeholder="Task title" required aria-label="New task title" />
-      <Textarea name="details" rows={2} placeholder="Details (optional)" aria-label="Details" />
-      <div className="flex items-center gap-2">
+      {fixedParent ? <input type="hidden" name="parentId" value={fixedParent.id} /> : null}
+
+      <Input
+        name="title"
+        placeholder={fixedParent ? `Sub-task of “${fixedParent.title}”` : 'Task title'}
+        required
+        aria-label="New task title"
+      />
+      <Textarea
+        name="details"
+        rows={2}
+        placeholder="Notes (optional) — context, links, decisions"
+        aria-label="Details"
+      />
+
+      <div className="flex flex-wrap items-center gap-2">
         <select
           name="owner"
-          defaultValue="Unassigned"
+          defaultValue={fixedParent?.owner ?? 'Unassigned'}
           aria-label="Owner"
           className="rounded-md border border-line/25 bg-raised px-2 py-1.5 text-sm"
         >
@@ -434,6 +512,23 @@ function AddTask({
             </option>
           ))}
         </select>
+
+        {!fixedParent && parents ? (
+          <select
+            name="parentId"
+            defaultValue="none"
+            aria-label="Workstream"
+            className="max-w-[16rem] rounded-md border border-line/25 bg-raised px-2 py-1.5 text-sm"
+          >
+            <option value="none">Its own workstream</option>
+            {parents.map((p) => (
+              <option key={p.id} value={p.id}>
+                Inside: {p.title}
+              </option>
+            ))}
+          </select>
+        ) : null}
+
         <Button type="submit" size="sm" disabled={pending}>
           Add
         </Button>

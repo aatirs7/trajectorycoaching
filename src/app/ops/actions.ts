@@ -40,12 +40,35 @@ export async function seedOpsBoard(): Promise<void> {
   if (rows.length) await db.insert(tasks).values(rows)
 }
 
+/**
+ * Resolve a requested parent to a legal one.
+ *
+ * The board renders exactly two levels, so a task parented to a CHILD would disappear
+ * from every view — present in the database, invisible in the product. Rather than
+ * rejecting that (the user's intent is obvious: "put this inside that group"), it walks
+ * up to the top-level ancestor and nests there.
+ *
+ * Returns null for "no parent", and null for a parent id that doesn't exist.
+ */
+async function resolveParent(raw: FormDataEntryValue | null): Promise<string | null> {
+  const id = String(raw ?? '').trim()
+  if (!id || id === 'none') return null
+
+  const parent = await db.query.tasks.findFirst({ where: eq(tasks.id, id) })
+  if (!parent) return null
+  if (!parent.parentId) return parent.id
+
+  const grandparent = await db.query.tasks.findFirst({ where: eq(tasks.id, parent.parentId) })
+  return grandparent?.id ?? parent.id
+}
+
 export async function createTask(formData: FormData): Promise<OpsState> {
   await requireAdmin()
   const title = String(formData.get('title') ?? '').trim()
   const category = formData.get('category')
   const owner = formData.get('owner') ?? 'Unassigned'
   const details = String(formData.get('details') ?? '').trim()
+  const parentId = await resolveParent(formData.get('parentId'))
 
   if (!title) return { error: 'A title is required.' }
   if (!isCategory(category)) return { error: 'Unknown category.' }
@@ -62,6 +85,7 @@ export async function createTask(formData: FormData): Promise<OpsState> {
     details: details || null,
     category,
     owner,
+    parentId,
     sortOrder: (max ?? -1) + 1,
   })
 
@@ -81,11 +105,30 @@ export async function updateTask(formData: FormData): Promise<OpsState> {
   if (!title) return { error: 'A title is required.' }
   if (owner !== null && owner !== undefined && !isOwner(owner)) return { error: 'Unknown owner.' }
 
+  /**
+   * Re-parenting is part of the edit form, so an existing task can be filed into a
+   * workstream after the fact — which is how grouping actually happens: you write the
+   * task first and notice where it belongs later.
+   *
+   * A task cannot be nested under itself, and a task that already HAS children cannot be
+   * nested under anything: doing either would create a level the views don't render, so
+   * the group would vanish from the board with no visible cause.
+   */
+  let parentId = await resolveParent(formData.get('parentId'))
+  if (parentId === id) parentId = null
+  if (parentId) {
+    const own = await db.select({ id: tasks.id }).from(tasks).where(eq(tasks.parentId, id)).limit(1)
+    if (own.length) {
+      return { error: 'That task has sub-tasks of its own, so it can’t be nested under another.' }
+    }
+  }
+
   await db
     .update(tasks)
     .set({
       title,
       details: details || null,
+      parentId,
       ...(isOwner(owner) ? { owner } : {}),
     })
     .where(eq(tasks.id, id))
