@@ -1,4 +1,13 @@
-import { boolean, index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import {
+  type AnyPgColumn,
+  boolean,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core'
 
 /**
  * Internal ops board (the shared Aatir/Isaiah to-do list at /ops). DB-backed on purpose:
@@ -12,6 +21,19 @@ export const tasks = pgTable(
   'tasks',
   {
     id: uuid('id').primaryKey().defaultRandom(),
+    /**
+     * Parent task, for grouping the small stuff under the workstream it belongs to
+     * ("Rebrand to MentorReach" owning the logo, the favicon and the copy sweep).
+     *
+     * ONE LEVEL ONLY by convention — a child never becomes a parent. Nothing in the
+     * schema enforces that (a self-reference can nest arbitrarily), but the board and the
+     * overview both render exactly two levels, so a grandchild would silently vanish from
+     * every view. If deeper nesting is ever wanted, the rendering has to change first.
+     *
+     * Cascade on delete: removing a workstream removes the work inside it, which is what
+     * "delete this task" means to someone looking at a parent row.
+     */
+    parentId: uuid('parent_id').references((): AnyPgColumn => tasks.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
     /** Optional longer note (emails, context). */
     details: text('details'),

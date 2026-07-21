@@ -66,6 +66,7 @@ export async function createTask(formData: FormData): Promise<OpsState> {
   })
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
 }
 
@@ -90,6 +91,7 @@ export async function updateTask(formData: FormData): Promise<OpsState> {
     .where(eq(tasks.id, id))
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
 }
 
@@ -134,6 +136,29 @@ function ownerNameFor(fullName: string | null): string | null {
   return match ?? fullName.trim()
 }
 
+/**
+ * Change who owns a task, on its own.
+ *
+ * Separate from updateTask because that one is the edit FORM: it requires a title and
+ * rewrites details, so reassigning from a dropdown through it would mean round-tripping
+ * fields the user never opened. Owner is the field most often changed and least often
+ * accompanied by anything else, so it gets a one-field action and an inline control.
+ */
+export async function setTaskOwner(formData: FormData): Promise<OpsState> {
+  await requireAdmin()
+  const id = String(formData.get('id') ?? '')
+  const owner = formData.get('owner')
+
+  if (!id) return { error: 'Missing task.' }
+  if (!isOwner(owner)) return { error: 'Unknown owner.' }
+
+  await db.update(tasks).set({ owner }).where(eq(tasks.id, id))
+
+  revalidatePath('/ops')
+  revalidatePath('/ops/overview')
+  return {}
+}
+
 export async function toggleThisWeek(formData: FormData): Promise<OpsState> {
   await requireAdmin()
   const id = String(formData.get('id') ?? '')
@@ -145,6 +170,7 @@ export async function toggleThisWeek(formData: FormData): Promise<OpsState> {
   await db.update(tasks).set({ thisWeek: !row.thisWeek }).where(eq(tasks.id, id))
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
 }
 
@@ -156,6 +182,7 @@ export async function deleteTask(formData: FormData): Promise<OpsState> {
   await db.delete(tasks).where(eq(tasks.id, id))
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
 }
 
@@ -187,5 +214,6 @@ export async function moveTask(formData: FormData): Promise<OpsState> {
   ])
 
   revalidatePath('/ops')
+  revalidatePath('/ops/overview')
   return {}
 }

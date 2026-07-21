@@ -11,9 +11,9 @@ export const dynamic = 'force-dynamic'
 /**
  * Internal ops / to-do board (spec: replaces the Google Doc).
  *
- * TODO: gate to admin. PUBLIC for now by design — wrap this in `await requireAdmin()`
- * (and add it to the actions) when the founders' accounts are set to admin. That's the
- * one-line change; nothing else here assumes public access.
+ * Founders-only — the gate lives in ./layout.tsx, alongside the console frame, and every
+ * server action re-checks it independently because an action is a POST that can be called
+ * without ever rendering this page.
  */
 export default async function OpsPage() {
   // Seed on first load only (no-op once the table has rows), so the board is accurate
@@ -27,6 +27,7 @@ export default async function OpsPage() {
 
   const view: OpsTaskView[] = rows.map((t) => ({
     id: t.id,
+    parentId: t.parentId,
     title: t.title,
     details: t.details,
     category: t.category,

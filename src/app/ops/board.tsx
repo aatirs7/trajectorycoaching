@@ -5,6 +5,7 @@ import {
   createTask,
   deleteTask,
   moveTask,
+  setTaskOwner,
   setTaskStatus,
   toggleThisWeek,
   updateTask,
@@ -25,6 +26,7 @@ import {
 
 export type OpsTaskView = {
   id: string
+  parentId: string | null
   title: string
   details: string | null
   category: string
@@ -43,10 +45,31 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
   // Run a server action (they take FormData) and refresh via revalidatePath.
   const run = (fn: (fd: FormData) => Promise<unknown>, fd: FormData) => start(() => void fn(fd))
 
-  const visible = useMemo(
-    () => tasks.filter((t) => ownerFilter === 'All' || t.owner === ownerFilter),
-    [tasks, ownerFilter],
-  )
+  const childrenOf = useMemo(() => {
+    const map = new Map<string, OpsTaskView[]>()
+    for (const t of tasks) {
+      if (!t.parentId) continue
+      const list = map.get(t.parentId) ?? []
+      list.push(t)
+      map.set(t.parentId, list)
+    }
+    return map
+  }, [tasks])
+
+  /**
+   * Owner filtering keeps a parent whose CHILDREN match, even when the parent itself is
+   * owned by someone else. "Onboard the 9 founding coaches" is owned by Both; hiding it
+   * when filtering to Isaiah would hide his coaches with it and make the filter look
+   * broken.
+   */
+  const visible = useMemo(() => {
+    if (ownerFilter === 'All') return tasks
+    return tasks.filter(
+      (t) =>
+        t.owner === ownerFilter ||
+        (childrenOf.get(t.id) ?? []).some((c) => c.owner === ownerFilter),
+    )
+  }, [tasks, ownerFilter, childrenOf])
 
   const doneCount = tasks.filter((t) => t.status === 'done').length
   const thisWeek = visible.filter((t) => t.thisWeek && t.status !== 'done')
@@ -115,16 +138,18 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
 
         {OPS_CATEGORIES.map((category) => {
           const rows = visible.filter((t) => t.category === category)
-          const shown = hideDone ? rows.filter((t) => t.status !== 'done') : rows
-          const hiddenDone = rows.length - shown.length
-          const done = rows.filter((t) => t.status === 'done').length
+          // Only top-level rows drive the list; children render inside their parent.
+          const parents = rows.filter((t) => !t.parentId)
+          const shown = hideDone ? parents.filter((t) => t.status !== 'done') : parents
+          const hiddenDone = parents.length - shown.length
+          const done = parents.filter((t) => t.status === 'done').length
 
           return (
             <section key={category} className="mb-12">
               <div className="flex items-baseline justify-between border-b border-line/15 pb-2">
                 <h2 className="font-display text-2xl">{category}</h2>
                 <span className="font-mono text-xs tracking-wide text-slate">
-                  {done}/{rows.length}
+                  {done}/{parents.length}
                 </span>
               </div>
 
@@ -133,6 +158,7 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
                   <TaskRow
                     key={t.id}
                     task={t}
+                    subtasks={childrenOf.get(t.id) ?? []}
                     isFirst={i === 0}
                     isLast={i === shown.length - 1}
                     run={run}
@@ -159,18 +185,24 @@ export function OpsBoard({ tasks }: { tasks: OpsTaskView[] }) {
 
 function TaskRow({
   task,
+  subtasks = [],
   isFirst,
   isLast,
   run,
   pending,
+  nested = false,
 }: {
   task: OpsTaskView
+  subtasks?: OpsTaskView[]
   isFirst: boolean
   isLast: boolean
   run: (fn: (fd: FormData) => Promise<unknown>, fd: FormData) => void
   pending: boolean
+  nested?: boolean
 }) {
-  const [expanded, setExpanded] = useState(false)
+  const childDone = subtasks.filter((c) => c.status === 'done').length
+  // Open a workstream by default when there's still work in it, closed once it's finished.
+  const [expanded, setExpanded] = useState(subtasks.length > 0 && childDone < subtasks.length)
   const [editing, setEditing] = useState(false)
   const done = task.status === 'done'
 
@@ -226,8 +258,8 @@ function TaskRow({
   }
 
   return (
-    <li className="rounded-lg border border-line/15 bg-raised">
-      <div className="flex items-start gap-3 p-3">
+    <li className={nested ? '' : 'rounded-lg border border-line/15 bg-raised'}>
+      <div className={`flex items-start gap-3 ${nested ? 'py-2' : 'p-3'}`}>
         <button
           type="button"
           onClick={() => run(setTaskStatus, fd({ status: done ? 'todo' : 'done' }))}
@@ -243,9 +275,16 @@ function TaskRow({
           <button
             type="button"
             onClick={() => setExpanded((e) => !e)}
-            className={`block text-left text-sm ${done ? 'text-slate line-through' : 'text-ink'}`}
+            className={`flex w-full items-center gap-2 text-left ${nested ? 'text-sm' : 'text-[0.95rem] font-medium'} ${
+              done ? 'text-slate line-through' : 'text-ink'
+            }`}
           >
-            {task.title}
+            <span className="min-w-0 flex-1">{task.title}</span>
+            {subtasks.length > 0 ? (
+              <span className="shrink-0 font-mono text-[10px] tracking-wide text-slate tabular-nums">
+                {childDone}/{subtasks.length} {expanded ? '▾' : '▸'}
+              </span>
+            ) : null}
           </button>
 
           {expanded && task.details ? (
@@ -255,13 +294,25 @@ function TaskRow({
           ) : null}
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase ${ownerTone(
+            {/*
+             * Owner is a live dropdown, not a badge you have to open the edit form to
+             * change. Reassigning is the single most common edit on this board, and it was
+             * two clicks deep behind "Edit" — which read as "ownership is fixed".
+             */}
+            <select
+              value={task.owner}
+              onChange={(e) => run(setTaskOwner, fd({ owner: e.target.value }))}
+              aria-label="Owner"
+              className={`cursor-pointer appearance-none rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase ${ownerTone(
                 task.owner,
               )}`}
             >
-              {task.owner}
-            </span>
+              {OPS_OWNERS.map((o) => (
+                <option key={o} value={o} className="bg-raised font-sans text-ink normal-case">
+                  {o}
+                </option>
+              ))}
+            </select>
 
             <select
               value={task.status}
@@ -302,7 +353,10 @@ function TaskRow({
               <button
                 type="button"
                 onClick={() => {
-                  if (confirm('Delete this task?')) run(deleteTask, fd({}))
+                  const msg = subtasks.length
+                    ? `Delete “${task.title}” and its ${subtasks.length} sub-task${subtasks.length === 1 ? '' : 's'}?`
+                    : 'Delete this task?'
+                  if (confirm(msg)) run(deleteTask, fd({}))
                 }}
                 className="hover:text-destructive"
               >
@@ -310,6 +364,23 @@ function TaskRow({
               </button>
             </span>
           </div>
+
+          {/* Children live inside the parent row, one level only. */}
+          {expanded && subtasks.length > 0 ? (
+            <ul className="mt-1 space-y-0 border-l border-line/20 pl-4">
+              {subtasks.map((c, i) => (
+                <TaskRow
+                  key={c.id}
+                  task={c}
+                  isFirst={i === 0}
+                  isLast={i === subtasks.length - 1}
+                  run={run}
+                  pending={pending}
+                  nested
+                />
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
     </li>
